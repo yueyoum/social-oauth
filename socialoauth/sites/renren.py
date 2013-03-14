@@ -34,7 +34,7 @@ class RenRen(OAuth):
         res = self.api_call_post(method='users.getInfo')
         
         
-        self.name = res[0]['name']
+        self.name = res[0]['name'].encode('utf-8')
         self.avatar = res[0]['tinyurl']
         self.avatar_large = res[0]['headurl']
         

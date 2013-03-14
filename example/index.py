@@ -19,7 +19,6 @@ settings.config(SOCIALOAUTH_SITES)
 
 
 
-
 @app.get('/login')
 def login():
     def _link(s):
@@ -47,24 +46,22 @@ def callback(sitename):
     code = request.GET.get('code')
     s = import_module(settings[sitename])()
     
-    try:
-        s.get_access_token(code)
-    except Exception, e:
-        print 'error', e
-        
-        redirect('/login')
+    s.get_access_token(code)
+    
     
     html = """<html>
     <body>
-        <h2>%d</h2>
-        <h2>%s</h2>
+        <h2>{0}</h2>
+        <h2>{1}</h2>
         <p>Large avatar</p>
-        <img src="%s" />
+        <img src="{2}" />
         <p>Small avatar</p>
-        <img src="%s" />
+        <img src="{3}" />
     </body>
     </html>
-    """ % (s.uid, s.name, s.avatar_large, s.avatar)
+    """ .format(s.uid, s.name, s.avatar_large, s.avatar)
+    
+    # qq 返回是是 openid， 是string
     
     return html
     

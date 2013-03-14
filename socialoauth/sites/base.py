@@ -32,15 +32,21 @@ class OAuth(object):
             
     
     
-    def http_get(self, url, data):
+    def http_get(self, url, data, parse=True):
         res = urllib2.urlopen('%s?%s' % (url, urlencode(data))).read()
-        return json.loads(res)
+        if parse:
+            return json.loads(res)
+        return res
     
     
-    def http_post(self, url, data):
+    def http_post(self, url, data, parse=True):
         req = urllib2.Request(url, data=urlencode(data))
         res = urllib2.urlopen(req).read()
-        return json.loads(res)
+        if parse:
+            return json.loads(res)
+        return res
+    
+    
     
     
     @property
@@ -51,12 +57,16 @@ class OAuth(object):
         
         if getattr(self, 'SCOPE', None) is not None:
             url = '%s&scope=%s' % (url, '+'.join(self.SCOPE))
-        
+            
+        # for qq
+        if getattr(self, 'STATE', None) is not None:
+            url = '%s&state=%s' % (url, self.STATE)
+         
         return url
     
     
     
-    def get_access_token(self, code):
+    def get_access_token(self, code, method='POST', parse=True):
         data = {
             'client_id': self.CLIENT_ID,
             'client_secret': self.CLIENT_SECRET,
@@ -67,10 +77,12 @@ class OAuth(object):
         
         
         try:
-            res = self.http_post(self.ACCESS_TOKEN_URL, data)
+            if method == 'POST':
+                res = self.http_post(self.ACCESS_TOKEN_URL, data, parse=parse)
+            else:
+                res = self.http_get(self.ACCESS_TOKEN_URL, data, parse=parse)
         except urllib2.HTTPError:
             raise SocialGetTokenError
-        
         
         self.parse_token_response(res)
         

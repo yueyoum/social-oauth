@@ -27,11 +27,11 @@ class Weibo(OAuth):
         url = 'https://api.weibo.com/2/users/show.json'
         res = self.api_call_get(url, uid=self.uid)
         
-        self.name = res['name']
+        self.name = res['name'].encode('utf-8')
         self.avatar = res['profile_image_url']
         self.avatar_large = res['avatar_large']
         
-        self.post_status('测试')
+        #self.post_status('测试')
         
         
     def post_status(self, text):
