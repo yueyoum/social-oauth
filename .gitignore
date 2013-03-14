@@ -1,0 +1,6 @@
+*.pyc
+*.bak
+*.swp
+
+settings.py
+
