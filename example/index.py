@@ -45,9 +45,7 @@ def login():
 @app.get('/account/oauth/<sitename>')
 def callback(sitename):
     code = request.GET.get('code')
-    print 'code =', code
     s = import_module(settings[sitename])()
-    print s
     
     try:
         s.get_access_token(code)

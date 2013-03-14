@@ -3,7 +3,6 @@
 from urllib import urlencode
 import urllib2
 import json
-import functools
 
 
 from socialoauth.exception import SocialGetTokenError, SocialAPIError
@@ -16,16 +15,16 @@ class OAuth(object):
     
     AUTHORIZE_URL    - Asking user to authorize and get token
     ACCESS_TOKEN_URL - Get authorized access token
-    REDIRECT_URI     - The url after user authorized and redirect to
     
+    
+    And the bellowing should define in settings file
+    
+    REDIRECT_URI     - The url after user authorized and redirect to
     CLIENT_ID        - Your client id for the social site
     CLIENT_SECRET    - Your client secret for the social site
     """
     
     def __init__(self):
-        self.api_call_get = functools.partial(self._api_call, method='GET')
-        self.api_call_post = functools.partial(self._api_call, method='POST')
-        
         key = '%s.%s' % (self.__class__.__module__, self.__class__.__name__)
         configs = settings.load_config(key)
         for k, v in configs.iteritems():
@@ -42,6 +41,7 @@ class OAuth(object):
         req = urllib2.Request(url, data=urlencode(data))
         res = urllib2.urlopen(req).read()
         return json.loads(res)
+    
     
     @property
     def authorize_url(self):
@@ -72,10 +72,20 @@ class OAuth(object):
             raise SocialGetTokenError
         
         
-        print 'res = ', res
+        self.parse_token_response(res)
         
-        self.access_token = res['access_token']
-        self.parse_ret(res)
+        
+        
+    def api_call_get(self, url=None, **kwargs):
+        url = self.build_api_url(url)
+        data = self.build_api_data(**kwargs)
+        return self._api_call(url, data, 'GET')
+    
+    def api_call_post(self, url=None, **kwargs):
+        url = self.build_api_url(url)
+        data = self.build_api_data(**kwargs)
+        return self._api_call(url, data, 'POST')
+        
         
         
     def _api_call(self, url, data, method):
@@ -88,6 +98,21 @@ class OAuth(object):
         
     
     
-    def parse_ret(self, res):
+    def parse_token_response(self, res):
+        """
+        Subclass MUST implement this function
+        And set the following attributes:
+        
+        access_token, uid, name, avatar, avatar_large
+        """
         raise NotImplementedError
+    
+    
+    def build_api_url(self, url):
+        raise NotImplementedError
+    
+    
+    def build_api_data(self, **kwargs):
+        raise NotImplementedError
+        
     
