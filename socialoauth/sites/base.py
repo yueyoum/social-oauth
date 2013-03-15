@@ -33,7 +33,9 @@ class OAuth(object):
     
     
     def http_get(self, url, data, parse=True):
-        res = urllib2.urlopen('%s?%s' % (url, urlencode(data))).read()
+        req = urllib2.Request('%s?%s' % (url, urlencode(data)))
+        self.http_add_header(req)
+        res = urllib2.urlopen(req).read()
         if parse:
             return json.loads(res)
         return res
@@ -41,11 +43,16 @@ class OAuth(object):
     
     def http_post(self, url, data, parse=True):
         req = urllib2.Request(url, data=urlencode(data))
+        self.http_add_header(req)
         res = urllib2.urlopen(req).read()
         if parse:
             return json.loads(res)
         return res
     
+    
+    def http_add_header(self, req):
+        """Sub class rewiter this function If it's necessary to add headers"""
+        pass
     
     
     
@@ -91,22 +98,24 @@ class OAuth(object):
     def api_call_get(self, url=None, **kwargs):
         url = self.build_api_url(url)
         data = self.build_api_data(**kwargs)
-        return self._api_call(url, data, 'GET')
+        #return self._api_call(url, data, 'GET')
+        return self.http_get(url, data)
     
     def api_call_post(self, url=None, **kwargs):
         url = self.build_api_url(url)
         data = self.build_api_data(**kwargs)
-        return self._api_call(url, data, 'POST')
+        #return self._api_call(url, data, 'POST')
+        return self.http_post(url, data)
         
         
         
-    def _api_call(self, url, data, method):
-        try:
-            if method == 'GET':
-                return self.http_get(url, data)
-            return self.http_post(url, data)
-        except urllib2.HTTPError:
-            raise SocialAPIError(url)
+    #def _api_call(self, url, data, method):
+    #    #try:
+    #    if method == 'GET':
+    #        return self.http_get(url, data)
+    #    return self.http_post(url, data)
+    #    #except urllib2.HTTPError:
+    #    #    raise SocialAPIError(url)
         
     
     
