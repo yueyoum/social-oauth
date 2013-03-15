@@ -6,27 +6,41 @@ import json
 
 
 from socialoauth.exception import SocialGetTokenError, SocialAPIError
-from socialoauth import settings
+from socialoauth import socialsites
 
 
-class OAuth(object):
+class OAuth2(object):
     """
-    Base OAuth class, Sub class must define the following settings:
+    Base OAuth2 class, Sub class must define the following settings:
     
     AUTHORIZE_URL    - Asking user to authorize and get token
     ACCESS_TOKEN_URL - Get authorized access token
-    
     
     And the bellowing should define in settings file
     
     REDIRECT_URI     - The url after user authorized and redirect to
     CLIENT_ID        - Your client id for the social site
     CLIENT_SECRET    - Your client secret for the social site
+    
+    Also, If the Website needs addtional parameters, your should add them too.
+    this parameters like below:
+    
+    SCOPE, STATE
+    
+    Details see: http://tools.ietf.org/html/rfc6749
+    
+    
+    
+    SubClass MUST Implement the following three methods:
+    
+    build_api_url(self, url)
+    build_api_data(self, **kwargs)
+    parse_token_response(self, res)
     """
     
     def __init__(self):
         key = '%s.%s' % (self.__class__.__module__, self.__class__.__name__)
-        configs = settings.load_config(key)
+        configs = socialsites.load_config(key)
         for k, v in configs.iteritems():
             setattr(self, k, v)
             
@@ -98,24 +112,13 @@ class OAuth(object):
     def api_call_get(self, url=None, **kwargs):
         url = self.build_api_url(url)
         data = self.build_api_data(**kwargs)
-        #return self._api_call(url, data, 'GET')
         return self.http_get(url, data)
     
     def api_call_post(self, url=None, **kwargs):
         url = self.build_api_url(url)
         data = self.build_api_data(**kwargs)
-        #return self._api_call(url, data, 'POST')
         return self.http_post(url, data)
         
-        
-        
-    #def _api_call(self, url, data, method):
-    #    #try:
-    #    if method == 'GET':
-    #        return self.http_get(url, data)
-    #    return self.http_post(url, data)
-    #    #except urllib2.HTTPError:
-    #    #    raise SocialAPIError(url)
         
     
     

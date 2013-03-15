@@ -11,10 +11,10 @@ sys.path.append(os.path.normpath(os.path.join(CURRENT_PATH, '..')))
 app = Bottle()
 
 from settings import SOCIALOAUTH_SITES
-from socialoauth import settings
+from socialoauth import socialsites
 from socialoauth.utils import import_module
 
-settings.config(SOCIALOAUTH_SITES)
+socialsites.config(SOCIALOAUTH_SITES)
 
 
 
@@ -26,7 +26,7 @@ def login():
         _s = m()
         return '<p><a href="%s">%s</a></p>' % (_s.authorize_url, _s.name)
     
-    links = map(_link, settings.list_sites())
+    links = map(_link, socialsites.list_sites())
     links = '\n'.join(links)
     
     
@@ -44,7 +44,7 @@ def login():
 @app.get('/account/oauth/<sitename>')
 def callback(sitename):
     code = request.GET.get('code')
-    s = import_module(settings[sitename])()
+    s = import_module(socialsites[sitename])()
     
     s.get_access_token(code)
     

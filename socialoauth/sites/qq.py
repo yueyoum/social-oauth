@@ -2,16 +2,14 @@
 import re
 import json
 
-from socialoauth.sites.base import OAuth
+from socialoauth.sites.base import OAuth2
 
 
 QQ_OPENID_PATTERN = re.compile('\{.+\}')
 
-class QQ(OAuth):
+class QQ(OAuth2):
     AUTHORIZE_URL = 'https://graph.qq.com/oauth2.0/authorize'
     ACCESS_TOKEN_URL = 'https://graph.qq.com/oauth2.0/token'
-    
-    #SCOPE = ['get_info']
     
     OPENID_URL = 'https://graph.qq.com/oauth2.0/me'
     
@@ -29,11 +27,10 @@ class QQ(OAuth):
         data = {
             'access_token': self.access_token,
             'oauth_consumer_key': self.CLIENT_ID,
-            'openid': self.openid
+            'openid': self.uid
         }
         data.update(kwargs)
         return data
-    
     
     
     
@@ -41,22 +38,18 @@ class QQ(OAuth):
         res = res.split('&')
         res = [_r.split('=') for _r in res]
         res = dict(res)
-        print res
         
         self.access_token = res['access_token']
+        self.expires_in = int(res['expires_in'])
         
         res = self.http_get(self.OPENID_URL, {'access_token': self.access_token}, parse=False)
-        
         res = json.loads(QQ_OPENID_PATTERN.search(res).group())
         
-        self.uid = self.openid = res['openid']
+        self.uid = res['openid']
         
         res = self.api_call_get(
-            #'https://graph.qq.com/user/get_info',
             'https://graph.qq.com/user/get_user_info',
         )
-        
-        print res
         
         
         self.name = res['nickname'].encode('utf-8')

@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
-from socialoauth.sites.base import OAuth
+from socialoauth.sites.base import OAuth2
 
 
-class Weibo(OAuth):
+class Weibo(OAuth2):
     AUTHORIZE_URL = 'https://api.weibo.com/oauth2/authorize'
     ACCESS_TOKEN_URL = 'https://api.weibo.com/oauth2/access_token'
     
@@ -19,13 +19,14 @@ class Weibo(OAuth):
         return data
     
     def parse_token_response(self, res):
-        print res
-        
         self.uid = int(res['uid'])
         self.access_token = res['access_token']
+        self.expires_in = res['expires_in']
         
-        url = 'https://api.weibo.com/2/users/show.json'
-        res = self.api_call_get(url, uid=self.uid)
+        res = self.api_call_get(
+            'https://api.weibo.com/2/users/show.json',
+            uid=self.uid
+        )
         
         self.name = res['name'].encode('utf-8')
         self.avatar = res['profile_image_url']

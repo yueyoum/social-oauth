@@ -6,10 +6,10 @@ from socialoauth.exception import SocialConfigError
 class Settings(object):
     """
     This class hold the sites settings.
-    User define OAuth configs, e.g. site name, oauth class, client_id, client_secret
+    User define OAuth2 configs, e.g. site name, oauth class, client_id, client_secret
     in settings file. This Class will parse and store it.
     
-    When a site OAuth class instantiated, It will load settings from there
+    When a site OAuth2 class instantiated, It will load settings from there
     """
     def __init__(self):
         self._configed = False
@@ -18,6 +18,7 @@ class Settings(object):
         
         
     def __getitem__(self, name):
+        """Get OAuth2 Class by it's setting name"""
         if not self._configed:
             raise SocialConfigError("No configure")
         
@@ -40,6 +41,13 @@ class Settings(object):
         
     
     def load_config(self, module_name):
+        """
+        OAuth2 Class get it's settings at here.
+        Example:
+            from socialoauth import socialsites
+            class_key_name = Class.__module__ + Class.__name__
+            settings = socialsites.load_config(class_key_name)
+        """
         return self.sites_config[module_name]
         
         
@@ -48,5 +56,5 @@ class Settings(object):
         
         
         
-settings = Settings()
+socialsites = Settings()
 
