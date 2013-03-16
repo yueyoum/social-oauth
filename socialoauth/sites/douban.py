@@ -33,7 +33,7 @@ class DouBan(OAuth2):
         res = self.api_call_get('/v2/user/~me')
         
         
-        self.name = res['name'].encode('utf-8')
+        self.name = res['name']
         self.avatar = res['avatar']
         self.avatar_large = ""
         

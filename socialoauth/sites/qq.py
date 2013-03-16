@@ -52,18 +52,7 @@ class QQ(OAuth2):
         )
         
         
-        self.name = res['nickname'].encode('utf-8')
+        self.name = res['nickname']
         self.avatar = res['figureurl_1']
         self.avatar_large = res['figureurl_2']
-        
-        #self.post_status('测试')
-        
-        
-    def post_status(self, text):
-        if isinstance(text, unicode):
-            text = text.encode('utf-8')
-            
-        url = 'https://api.weibo.com/2/statuses/update.json'
-        res = self.api_call_post(url, status=text)
-        print res
         

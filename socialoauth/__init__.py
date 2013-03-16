@@ -3,6 +3,10 @@
 from socialoauth.exception import SocialConfigError
 
 
+version_info = (0, 1, 0)
+VERSION = __version__ = '.'.join( map(str, version_info) )
+
+
 class Settings(object):
     """
     This class hold the sites settings.
@@ -33,7 +37,7 @@ class Settings(object):
         """Call This method when application start"""
         for k, v in settings.iteritems():
             self.sites[k] = v[0]
-            self.sites_config[v[0]] = {'name': k}
+            self.sites_config[v[0]] = {'site_name': k}
             for _k, _v in v[1].iteritems():
                 self.sites_config[v[0]][_k.upper()] = _v
                 

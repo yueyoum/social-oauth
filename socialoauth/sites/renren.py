@@ -32,12 +32,10 @@ class RenRen(OAuth2):
         self.refresh_token = res['refresh_token']
         
         res = self.api_call_post(method='users.getInfo')
-        self.name = res[0]['name'].encode('utf-8')
+        self.name = res[0]['name']
         self.avatar = res[0]['tinyurl']
         self.avatar_large = res[0]['headurl']
         
-        
-        #self.post_status(u'啊啊啊')
         
         
         
@@ -46,5 +44,4 @@ class RenRen(OAuth2):
             text = text.encode('utf-8')
         
         res = self.api_call_post(method='status.set', status=text)
-        print res
 

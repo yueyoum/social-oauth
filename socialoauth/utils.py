@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 
-def import_module(m):
+def import_oauth_class(m):
     m = m.split('.')
     c = m.pop(-1)
     module = __import__('.'.join(m), fromlist=[c])

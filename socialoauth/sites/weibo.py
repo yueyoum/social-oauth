@@ -28,11 +28,10 @@ class Weibo(OAuth2):
             uid=self.uid
         )
         
-        self.name = res['name'].encode('utf-8')
+        self.name = res['name']
         self.avatar = res['profile_image_url']
         self.avatar_large = res['avatar_large']
         
-        #self.post_status('测试')
         
         
     def post_status(self, text):
@@ -41,5 +40,4 @@ class Weibo(OAuth2):
             
         url = 'https://api.weibo.com/2/statuses/update.json'
         res = self.api_call_post(url, status=text)
-        print res
         
