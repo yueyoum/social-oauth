@@ -3,18 +3,61 @@ import os
 import sys
 
 
-from bottle import Bottle, run, request, redirect
+from bottle import Bottle, run, request, response, redirect, static_file
 
 CURRENT_PATH = os.path.dirname(os.path.realpath(__file__))
 sys.path.append(os.path.normpath(os.path.join(CURRENT_PATH, '..')))
 
-app = Bottle()
+IMAGE_PATH = os.path.join(CURRENT_PATH, 'images')
 
 from settings import SOCIALOAUTH_SITES
 from socialoauth import socialsites
-from socialoauth.utils import import_module
+from socialoauth.utils import import_oauth_class
+
+from helper import Session, UserStorage, gen_session_id
 
 socialsites.config(SOCIALOAUTH_SITES)
+
+
+
+app = Bottle()
+
+
+@app.get('/static/images/<filepath:path>')
+def static_files(filepath):
+    return static_file(filepath, IMAGE_PATH, mimetype='image/png')
+
+
+@app.get('/')
+def index():
+    session_id = request.get_cookie('session_id')
+    if session_id:
+        session = Session()
+        data = session.get(session_id)
+        uid = data.get('uid', None)
+        if uid:
+            storage = UserStorage()
+            user = storage.get_user(uid)
+            
+            
+            html = """<!DOCTYPE html>
+            <html>
+                <body>
+                <h2>Welcome. %s</h2>
+                <img src="%s" />
+                <p><a href="/logout">Logout</a></p>
+                </body>
+            </html>""" % (user['name'], user['avatar'])
+            
+            return html
+    
+    if not session_id:
+        response.set_cookie('session_id', gen_session_id())
+    html = """<html>
+    <body><a href="/login">Login</a></body>
+    </html>"""
+    
+    return html
 
 
 
@@ -22,9 +65,11 @@ socialsites.config(SOCIALOAUTH_SITES)
 @app.get('/login')
 def login():
     def _link(s):
-        m = import_module(s)
+        m = import_oauth_class(s)
         _s = m()
-        return '<p><a href="%s">%s</a></p>' % (_s.authorize_url, _s.name)
+        return """<div style="margin: 20px;">
+        <a href="%s"><img src="/static/images/%s.png" /></a>
+        </div>""" % (_s.authorize_url, _s.site_name)
     
     links = map(_link, socialsites.list_sites())
     links = '\n'.join(links)
@@ -32,44 +77,71 @@ def login():
     
     html = """<!DOCTYPE html>
     <html>
-    <body>
-        %s
-    </body>
+        <body>%s</body>
     </html>
     """ % links
     
     return html
     
     
+    
 @app.get('/account/oauth/<sitename>')
 def callback(sitename):
     code = request.GET.get('code')
-    s = import_module(socialsites[sitename])()
+    if not code:
+        # error occurred
+        redirect('/oautherror')
     
+    s = import_oauth_class(socialsites[sitename])()
     s.get_access_token(code)
     
+    # 到这里授权完毕，并且取到了用户信息，uid, name, avatar...
+    storage = UserStorage()
+    UID = storage.get_uid(s.site_name, s.uid)
+    if not UID:
+        # 此用户第一次登录，为其绑定一个自身网站的UID
+        UID = storage.bind_new_user(s.site_name, s.uid)
+        
     
-    html = """<html>
-    <body>
-        <h2>{0}</h2>
-        <h2>{1}</h2>
-        <p>Large avatar</p>
-        <img src="{2}" />
-        <p>Small avatar</p>
-        <img src="{3}" />
-    </body>
-    </html>
-    """ .format(s.uid, s.name, s.avatar_large, s.avatar)
+    storage.set_user(UID, name=s.name, avatar=s.avatar)
+    session_id = request.get_cookie('session_id')
+    if not session_id:
+        session_id = Session.make_session_id(UID)
+    session = Session()
+    session.set(session_id, uid=UID)
+    response.set_cookie('session_id', session_id)
     
-    # qq 返回是是 openid， 是string
-    
-    return html
-    
-    
-    
-    
-    
-    
+    #print storage.user
+    #print storage.table
+    #
+    #print session._sessions
     
     
-run(app)
+    redirect('/')
+    
+    
+    
+    
+@app.get('/logout')
+def logout():
+    session_id = request.get_cookie('session_id')
+    if not session_id:
+        redirect('/')
+    
+    session = Session()
+    data = session.get(session_id)
+    session.rem(session_id)
+    uid = data.get('uid', None)
+    if uid:
+        # 重置其session_id
+        Session.refresh_session_id(uid)
+        
+    response.set_cookie('session_id', '')
+    redirect('/')
+    
+    
+    
+    
+if __name__ == '__main__':    
+    run(app)
+    
