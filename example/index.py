@@ -141,6 +141,11 @@ def logout():
     
     
     
+@app.get('/oautherror')
+def oautherror():
+    print 'OAuth Error!'
+    redirect('/')
+    
     
 if __name__ == '__main__':    
     run(app)
