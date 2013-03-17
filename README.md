@@ -8,7 +8,7 @@ socialoauth 专注于中国大陆开放了OAuth2认证的网站，并且着重�
 为了将大量用户方便的导入到自己的网站，免去再次注册的麻烦。
 
 但socialoauth也是很容易扩展的：
-**对于支持OAuth2的网站，只需要一个子类重写3个（或更多）方法即可** [如何扩展](/#-4/)
+**对于支持OAuth2的网站，只需要一个子类重写3个（或更多）方法即可** [如何扩展](#-4)
 
 
 ## Supported sites
@@ -37,7 +37,7 @@ socialoauth 专注于中国大陆开放了OAuth2认证的网站，并且着重�
     cd social-oauth/example
     cp settings.py.example settings.py
     
-    # 在这里按照你的情况修改settings.py。详细情况见[下面](/#settingspy-1/)
+    # 在这里按照你的情况修改settings.py。详细情况见[下面](#settingspy-1)
     
     python index.py
     
