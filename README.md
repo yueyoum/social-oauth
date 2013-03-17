@@ -1,6 +1,6 @@
 # socialoauth
 
-Python Package Of A Sets Of Social Websits OAuth2 Clients
+python package for SNS sites with OAuth2 support
 
 ## 简介
 
@@ -33,14 +33,15 @@ socialoauth 专注于中国大陆开放了OAuth2认证的网站，并且着重�
 
 快速体验 socialoauth
 
-    git clone https://github.com/yueyoum/social-oauth.git
-    cd social-oauth/example
-    cp settings.py.example settings.py
-    
-    # 在这里按照你的情况修改settings.py
-    
-    python index.py
-    
+```bash
+git clone https://github.com/yueyoum/social-oauth.git
+cd social-oauth/example
+cp settings.py.example settings.py
+
+# 在这里按照你的情况修改settings.py
+
+python index.py
+```
 
 如何配置 settings.py ?  [点这里](#settingspy-1)
 
@@ -77,24 +78,28 @@ example中有个简单的session机制，
 socialoauth 得知道有哪些站点，以及这些站点各自的设置。所以 以下代码 **必须** 在项目启动
 的时候就要运行
 
-    from settings import SOCIALOAUTH_SITES
-    from socialoauth import socialsites
-    
-    socialsites.config(SOCIALOAUTH_SITES)
+```python
+from settings import SOCIALOAUTH_SITES
+from socialoauth import socialsites
+
+socialsites.config(SOCIALOAUTH_SITES)
+```
 
 
 然后在后续的代码中 只要同样 `from socialoauth import socialsites` 就可以得到配置的站点信息
 
-    # 取某一站点的设置
-    config = socialsites.load_config('socialoauth.sites.renren.RenRen')
-    
-    # 列出全部配置的站点模块
-    socialsites.list_sites()
-    # ['socialoauth.sites.renren.RenRen', 'socialoauth.sites.weibo.Weibo'...]
-    
-    # 取某站点名字对于的OAuth2类
-    socialsites['renren']
-    # 'socialoauth.sites.renren.RenRen'
+```python
+# 取某一站点的设置
+config = socialsites.load_config('socialoauth.sites.renren.RenRen')
+
+# 列出全部配置的站点模块
+socialsites.list_sites()
+# ['socialoauth.sites.renren.RenRen', 'socialoauth.sites.weibo.Weibo'...]
+
+# 取某站点名字对于的OAuth2类
+socialsites['renren']
+# 'socialoauth.sites.renren.RenRen'
+```
     
 
 
@@ -102,42 +107,44 @@ socialoauth 得知道有哪些站点，以及这些站点各自的设置。所�
 
 假如你的 redirect_uri 对应的 views 处理函数为 callback， 如下所示：
 
-    from socialoauth import socialsites
-    from socialoauth.utils import import_oauth_class
-    from socialoauth.exception import SocialAPIError
+```python
+from socialoauth import socialsites
+from socialoauth.utils import import_oauth_class
+from socialoauth.exception import SocialAPIError
+
+def callback(reqest, sitename):
+# sitename 参数就是从 redirect_uri 中取得的
+# 比如 我在 settings.py.example 中设置的那样
+# renren 的 redirect_uri 为 http://test.org/account/oauth/renren
+# 那用web框架url的处理功能把 renren 取出来，作为sitename 传递给 callback 函数
+
+# request 是一个http请求对象，不同web框架传递此对象的方式不一样
+
+# 网站在用户点击认证后，会跳转到 redirect_uri， 形式是 http://REDIRECT_URI?code=xxx
+# 所以这里要取到get param code
+code = request.GET.get('code')
+if not code:
+    # 认证返回的params中没有code，肯定出错了
+    # 重定向到某处，再做处理
+    redirect('/SOME_WHERE')
     
-    def callback(reqest, sitename):
-        # sitename 参数就是从 redirect_uri 中取得的
-        # 比如 我在 settings.py.example 中设置的那样
-        # renren 的 redirect_uri 为 http://test.org/account/oauth/renren
-        # 那用web框架url的处理功能把 renren 取出来，作为sitename 传递给 callback 函数
-        
-        # request 是一个http请求对象，不同web框架传递此对象的方式不一样
-        
-        # 网站在用户点击认证后，会跳转到 redirect_uri， 形式是 http://REDIRECT_URI?code=xxx
-        # 所以这里要取到get param code
-        code = request.GET.get('code')
-        if not code:
-            # 认证返回的params中没有code，肯定出错了
-            # 重定向到某处，再做处理
-            redirect('/SOME_WHERE')
-            
-        s = import_oauth_class(socialsites[sitename])()
-        
-        # 用code去换取认证的access_token
-        try:
-            s.get_access_token(code)
-        except SocialAPIError as e:
-            # 这里可能会出错
-            # e.site_name      - 哪个站点的OAuth2发生错误？
-            # e.url            - 当时请求的url
-            # e.code           - http response code (不是api返回的错误代码)
-            # e.error_msg      - 这里才是由api返回的错误信息, string
-            
-            # 就在这里处理错误
-            
-        # 到这里就处理完毕，并且取到了用户的部分信息： uid, name, avatar
-        # 腾讯的 uid 是他所说的openid，是 string，其他站点的uid都是 int
+s = import_oauth_class(socialsites[sitename])()
+
+# 用code去换取认证的access_token
+try:
+    s.get_access_token(code)
+except SocialAPIError as e:
+    # 这里可能会出错
+    # e.site_name      - 哪个站点的OAuth2发生错误？
+    # e.url            - 当时请求的url
+    # e.code           - http response code (不是api返回的错误代码)
+    # e.error_msg      - 这里才是由api返回的错误信息, string
+    
+    # 就在这里处理错误
+    
+# 到这里就处理完毕，并且取到了用户的部分信息： uid, name, avatar
+# 腾讯的 uid 是他所说的openid，是 string，其他站点的uid都是 int
+```
 
 
 
@@ -148,43 +155,44 @@ socialoauth 得知道有哪些站点，以及这些站点各自的设置。所�
 
 配置示例:
 
-
-    SOCIALOAUTH_SITES = {
-        'renren': ('socialoauth.sites.renren.RenRen',
-                   {
-                    'redirect_uri': 'http://test.org/account/oauth/renren',
-                    'client_id': 'YOUR ID',
-                    'client_secret': 'YOUR SECRET',
-                    'scope': ['publish_feed', 'status_update']
-                   }
-        ),
-            
-        'weibo': ('socialoauth.sites.weibo.Weibo',
-                  {
-                    'redirect_uri': 'http://test.org/account/oauth/weibo',
-                    'client_id': 'YOUR ID',
-                    'client_secret': 'YOUR SECRET',
-                  }
-        ),
+```python
+SOCIALOAUTH_SITES = {
+    'renren': ('socialoauth.sites.renren.RenRen',
+               {
+                'redirect_uri': 'http://test.org/account/oauth/renren',
+                'client_id': 'YOUR ID',
+                'client_secret': 'YOUR SECRET',
+                'scope': ['publish_feed', 'status_update']
+               }
+    ),
         
-        'qq': ('socialoauth.sites.qq.QQ',
-                  {
-                    'redirect_uri': 'http://test.org/account/oauth/qq',
-                    'client_id': 'YOUR ID',
-                    'client_secret': 'YOUR SECRET',
-                  }
-        ),
-            
-        'douban': ('socialoauth.sites.douban.DouBan',
-                  {
-                    'redirect_uri': 'http://test.org/account/oauth/douban',
-                    'client_id': 'YOUR ID',
-                    'client_secret': 'YOUR SECRET',
-                    'scope': ['douban_basic_common']
-                  }
-        ),
+    'weibo': ('socialoauth.sites.weibo.Weibo',
+              {
+                'redirect_uri': 'http://test.org/account/oauth/weibo',
+                'client_id': 'YOUR ID',
+                'client_secret': 'YOUR SECRET',
+              }
+    ),
+    
+    'qq': ('socialoauth.sites.qq.QQ',
+              {
+                'redirect_uri': 'http://test.org/account/oauth/qq',
+                'client_id': 'YOUR ID',
+                'client_secret': 'YOUR SECRET',
+              }
+    ),
         
-    }
+    'douban': ('socialoauth.sites.douban.DouBan',
+              {
+                'redirect_uri': 'http://test.org/account/oauth/douban',
+                'client_id': 'YOUR ID',
+                'client_secret': 'YOUR SECRET',
+                'scope': ['douban_basic_common']
+              }
+    ),
+    
+}
+```
     
     
 `SOCIALOAUTH_SITES` 是此配置的名字，同样，你也可以随意更改
@@ -215,73 +223,74 @@ socialoauth 得知道有哪些站点，以及这些站点各自的设置。所�
 1.  cd social-oauth/socialoauth/sites
 2.  vim new_site.py
 
-        #  this is new_site.py
-        from socialoauth.sites.base import OAuth2
-        
-        class NewSite(OAuth2):
-            AUTHORIZE_URL = 'https://xxx'
-            ACCESS_TOKEN_URL = 'https://xxx'
-            
-            # 这两条url从站点文档中取到，
-            # 第一个是请求用户认证的URL，
-            # 第二个是根据第一步转到回调地址传会的code取得access_token的地址
-            
-            
-            @property
-            def authorize_url(self):
-                # 一般情况都不用重写此方法，只有一些特殊站点需要添加特殊参数的时候，
-                # 再按照下面这种方式重写
-                # url 中 已经有了 client_id, response_type, redirect_uri,
-                # scope(如果在settings.py设置了 SCOPE)
-                # 然后再加上这个站点所需的特殊参数即可
-                url = super(NewSite, self).authorize_url
-                return url + 'xxxxx'
-            
-            
-            def build_api_url(self, *args):
-                # 如果一个网站它的api url是固定的，比如人人，
-                # 那么这里每次返回固定的url即可。
-                # 然后在调用 api_call_get/get_call_post时，只需要传递关键字参数即可
-                # 例如 res = self.api_call_get(param=1)
-                #
-                # return SOME_URL
-                
-                # 但大多数站点每个API都有不同的url，
-                # 这里有两种处理方式
-                # 第一个中是把公共的地方提取出来，
-                # 在api_call_get/api_call_post的时候值传递部分url。
-                # 第二个就是在 api_call 时传递完整的url
-                # 例如 res = self.api_call_get('https://xxx', param=1)
-                
-                # return args[0]
-                
-                pass
-                
-                
-            def build_api_data(self, **kwargs):
-                # api 调用的时候需要传递参数，对于固定参数比如 access_token 等，
-                # 可以写在这里，在调用api_call只需要以关键字的方式传入所需参数即可
-                
-                data = {
-                    'access_token': self.access_token
-                }
-                data.update(kwargs)
-                return data
-                
-                
-            def http_add_header(self, req):
-                # 一般都不用理会此函数。
-                # 只是一些特殊站点，比如豆瓣他的认证需要你设置header
-                # 就重写此方法，req 是 urllib2.Reqeust 实例
-                # req.add_header(name, value)
-                
-                
-                
-            def parse_token_response(self, res):
-                # res 是请求access_token后的返回。
-                # 在这里要取到此授权用户的基本信息，uid, name, avatar等
-                # 各个站点在这里的差异较大
+```python
+#  this is new_site.py
+from socialoauth.sites.base import OAuth2
 
+class NewSite(OAuth2):
+    AUTHORIZE_URL = 'https://xxx'
+    ACCESS_TOKEN_URL = 'https://xxx'
+    
+    # 这两条url从站点文档中取到，
+    # 第一个是请求用户认证的URL，
+    # 第二个是根据第一步转到回调地址传会的code取得access_token的地址
+    
+    
+    @property
+    def authorize_url(self):
+        # 一般情况都不用重写此方法，只有一些特殊站点需要添加特殊参数的时候，
+        # 再按照下面这种方式重写
+        # url 中 已经有了 client_id, response_type, redirect_uri,
+        # scope(如果在settings.py设置了 SCOPE)
+        # 然后再加上这个站点所需的特殊参数即可
+        url = super(NewSite, self).authorize_url
+        return url + 'xxxxx'
+    
+    
+    def build_api_url(self, *args):
+        # 如果一个网站它的api url是固定的，比如人人，
+        # 那么这里每次返回固定的url即可。
+        # 然后在调用 api_call_get/get_call_post时，只需要传递关键字参数即可
+        # 例如 res = self.api_call_get(param=1)
+        #
+        # return SOME_URL
+        
+        # 但大多数站点每个API都有不同的url，
+        # 这里有两种处理方式
+        # 第一个中是把公共的地方提取出来，
+        # 在api_call_get/api_call_post的时候值传递部分url。
+        # 第二个就是在 api_call 时传递完整的url
+        # 例如 res = self.api_call_get('https://xxx', param=1)
+        
+        # return args[0]
+        
+        pass
+        
+        
+    def build_api_data(self, **kwargs):
+        # api 调用的时候需要传递参数，对于固定参数比如 access_token 等，
+        # 可以写在这里，在调用api_call只需要以关键字的方式传入所需参数即可
+        
+        data = {
+            'access_token': self.access_token
+        }
+        data.update(kwargs)
+        return data
+        
+        
+    def http_add_header(self, req):
+        # 一般都不用理会此函数。
+        # 只是一些特殊站点，比如豆瓣他的认证需要你设置header
+        # 就重写此方法，req 是 urllib2.Reqeust 实例
+        # req.add_header(name, value)
+        
+        
+        
+    def parse_token_response(self, res):
+        # res 是请求access_token后的返回。
+        # 在这里要取到此授权用户的基本信息，uid, name, avatar等
+        # 各个站点在这里的差异较大
+```
 
 
 
