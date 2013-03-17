@@ -37,11 +37,13 @@ socialoauth 专注于中国大陆开放了OAuth2认证的网站，并且着重�
     cd social-oauth/example
     cp settings.py.example settings.py
     
-    # 在这里按照你的情况修改settings.py。详细情况见[下面](#settingspy-1)
+    # 在这里按照你的情况修改settings.py
     
     python index.py
     
-    
+
+如何配置 settings.py ?  [点这里](#settingspy-1)
+
 现在用浏览器打开对应的地址，就能体验相应的功能。
 
 下面是我用 人人网 帐号登录的过程：
