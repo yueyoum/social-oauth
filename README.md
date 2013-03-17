@@ -24,6 +24,18 @@ socialoauth 专注于中国大陆开放了OAuth2认证的网站，并且着重�
 
 
 
+## Install
+
+```bash
+pip install socialoauth
+
+# or
+
+git clone https://github.com/yueyoum/social-oauth.git
+cd social-oauth
+python setup.py install
+```
+
 
 
 ## Example
