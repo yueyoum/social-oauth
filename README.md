@@ -15,8 +15,8 @@ socialoauth 专注于中国大陆开放了OAuth2认证的网站，并且着重�
 
 *   人人
 *   腾讯
-*   新浪微博
 *   豆瓣
+*   新浪微博
 *   网易微博
 *   搜狐微博
 
@@ -24,7 +24,6 @@ socialoauth 专注于中国大陆开放了OAuth2认证的网站，并且着重�
 
 *   百度
 *   开心网
-*   天涯
 
 
 
@@ -99,7 +98,7 @@ socialoauth 得知道有哪些站点，以及这些站点各自的设置。所�
 
 ## OAuth2认证过程的错误处理
 
-加入你的 redirect_uri 对应的 views 处理函数为 callback， 如下所示：
+假如你的 redirect_uri 对应的 views 处理函数为 callback， 如下所示：
 
     from socialoauth import socialsites
     from socialoauth.utils import import_oauth_class
@@ -111,8 +110,10 @@ socialoauth 得知道有哪些站点，以及这些站点各自的设置。所�
         # renren 的 redirect_uri 为 http://test.org/account/oauth/renren
         # 那用web框架url的处理功能把 renren 取出来，作为sitename 传递给 callback 函数
         
-        # request 是一个http请求，不同web框架传递此对象的方式不一样
+        # request 是一个http请求对象，不同web框架传递此对象的方式不一样
         
+        # 网站在用户点击认证后，会跳转到 redirect_uri， 形式是 http://REDIRECT_URI?code=xxx
+        # 所以这里要取到get param code
         code = request.GET.get('code')
         if not code:
             # 认证返回的params中没有code，肯定出错了
@@ -223,6 +224,18 @@ socialoauth 得知道有哪些站点，以及这些站点各自的设置。所�
             # 第一个是请求用户认证的URL，
             # 第二个是根据第一步转到回调地址传会的code取得access_token的地址
             
+            
+            @property
+            def authorize_url(self):
+                # 一般情况都不用重写此方法，只有一些特殊站点需要添加特殊参数的时候，
+                # 再按照下面这种方式重写
+                # url 中 已经有了 client_id, response_type, redirect_uri,
+                # scope(如果在settings.py设置了 SCOPE)
+                # 然后再加上这个站点所需的特殊参数即可
+                url = super(NewSite, self).authorize_url
+                return url + 'xxxxx'
+            
+            
             def build_api_url(self, *args):
                 # 如果一个网站它的api url是固定的，比如人人，
                 # 那么这里每次返回固定的url即可。
@@ -280,5 +293,14 @@ socialoauth 得知道有哪些站点，以及这些站点各自的设置。所�
 *   人人网文档虽然内容丰富，但层次略混乱
 *   豆瓣文档太简陋
 *   搜狐文档就是个渣！！！ 都不想添加搜狐支持了
+*   发现一些文档和实际操作有出入， 主要是文档里说的必要参数，不传也一样工作
+    
+    *   [腾讯][tocao_tencent_1] 文档里说取code的时候，state 必须 参数，但发现不传一样
+    *   [搜狐][tocao_souhu_1] 和上面一样， wrap_client_state 参数
 
 
+
+
+
+[tocao_tencent_1]: http://wiki.opensns.qq.com/wiki/【QQ登录】使用Authorization_Code获取Access_Token
+[tocao_souhu_1]: http://open.t.sohu.com/en/使用Authorization_Code获取Access_Token
