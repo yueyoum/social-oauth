@@ -89,10 +89,6 @@ class OAuth2(object):
         
         if getattr(self, 'SCOPE', None) is not None:
             url = '%s&scope=%s' % (url, '+'.join(self.SCOPE))
-            
-        # for qq
-        if getattr(self, 'STATE', None) is not None:
-            url = '%s&state=%s' % (url, self.STATE)
          
         return url
     

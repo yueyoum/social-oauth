@@ -13,7 +13,11 @@ class QQ(OAuth2):
     
     OPENID_URL = 'https://graph.qq.com/oauth2.0/me'
     
-    STATE = 'socialoauth'
+    
+    @property
+    def authorize_url(self):
+        url = super(QQ, self).authorize_url
+        return '%s&state=socialoauth' % url
     
     
     def get_access_token(self, code):
