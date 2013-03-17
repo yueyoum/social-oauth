@@ -10,7 +10,7 @@ from socialoauth import socialsites
 
 
 
-def _api_error_handler(func):
+def _http_error_handler(func):
     @wraps(func)
     def deco(self, *args, **kwargs):
         try:
@@ -33,10 +33,9 @@ class OAuth2(object):
     CLIENT_ID        - Your client id for the social site
     CLIENT_SECRET    - Your client secret for the social site
 
-    Also, If the Website needs addtional parameters, your should add them too.
-    this parameters like below:
+    Also, If the Website needs scope parameters, your should add it too.
 
-    SCOPE, STATE
+    SCOPE            - A list type contains some scopes
 
     Details see: http://tools.ietf.org/html/rfc6749
 
@@ -56,7 +55,7 @@ class OAuth2(object):
             setattr(self, k, v)
 
 
-    @_api_error_handler
+    @_http_error_handler
     def http_get(self, url, data, parse=True):
         req = urllib2.Request('%s?%s' % (url, urlencode(data)))
         self.http_add_header(req)
@@ -66,7 +65,7 @@ class OAuth2(object):
         return res
 
 
-    @_api_error_handler
+    @_http_error_handler
     def http_post(self, url, data, parse=True):
         req = urllib2.Request(url, data=urlencode(data))
         self.http_add_header(req)
