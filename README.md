@@ -165,7 +165,7 @@ example中有个简单的session机制，
                 # 第二个就是在 api_call 时传递完整的url
                 # 例如 res = self.api_call_get('https://xxx', param=1)
                 
-                # return url
+                # return args[0]
                 
                 pass
                 
@@ -203,7 +203,7 @@ example中有个简单的session机制，
 
 ## 注意
 
-socialoauth 得知道有哪些站点，以及这些站点各自的设置。所以 一下代码 **必须** 在项目启动
+socialoauth 得知道有哪些站点，以及这些站点各自的设置。所以 以下代码 **必须** 在项目启动
 的时候就要运行
 
     from settings import SOCIALOAUTH_SITES
@@ -218,10 +218,10 @@ socialoauth 得知道有哪些站点，以及这些站点各自的设置。所�
     config = socialsites.load_config('socialoauth.sites.renren.RenRen')
     
     # 列出全部配置的站点模块
-    socialoauth.list_sites()
+    socialsites.list_sites()
     # ['socialoauth.sites.renren.RenRen', 'socialoauth.sites.weibo.Weibo'...]
     
     # 取某站点名字对于的OAuth2类
-    socialoauth['renren']
+    socialsites['renren']
     # 'socialoauth.sites.renren.RenRen'
     
