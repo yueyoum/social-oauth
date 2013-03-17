@@ -3,7 +3,8 @@ import os
 import sys
 
 
-from bottle import Bottle, run, request, response, redirect, static_file
+from _bottle import Bottle, run, request, response, redirect, static_file
+
 
 CURRENT_PATH = os.path.dirname(os.path.realpath(__file__))
 sys.path.append(os.path.normpath(os.path.join(CURRENT_PATH, '..')))

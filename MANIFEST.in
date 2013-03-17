@@ -1,0 +1,6 @@
+include LICENSE
+include MANIFEST.in
+recursive-include example *
+recursive-include example/images *
+recursive-exclude * *.pyc
+exclude example/settings.py
