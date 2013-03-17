@@ -17,11 +17,15 @@ socialoauth 专注于中国大陆开放了OAuth2认证的网站，并且着重�
 *   腾讯
 *   新浪微博
 *   豆瓣
+*   网易微博
+*   搜狐微博
 
 #### 下面是TODO 中的站点
 
-*   网易
-*   搜狐
+*   百度
+*   开心网
+*   天涯
+
 
 
 
@@ -64,6 +68,75 @@ example中有个简单的session机制，
 此时再打开首页（不关闭浏览器）就不用再登录，会直接显示名字和头像
 
 ![step4](http://i1297.photobucket.com/albums/ag23/yueyoum/x3_shadowed_zpse6a0f575.png)
+
+
+
+## 注意
+
+socialoauth 得知道有哪些站点，以及这些站点各自的设置。所以 以下代码 **必须** 在项目启动
+的时候就要运行
+
+    from settings import SOCIALOAUTH_SITES
+    from socialoauth import socialsites
+    
+    socialsites.config(SOCIALOAUTH_SITES)
+
+
+然后在后续的代码中 只要同样 `from socialoauth import socialsites` 就可以得到配置的站点信息
+
+    # 取某一站点的设置
+    config = socialsites.load_config('socialoauth.sites.renren.RenRen')
+    
+    # 列出全部配置的站点模块
+    socialsites.list_sites()
+    # ['socialoauth.sites.renren.RenRen', 'socialoauth.sites.weibo.Weibo'...]
+    
+    # 取某站点名字对于的OAuth2类
+    socialsites['renren']
+    # 'socialoauth.sites.renren.RenRen'
+    
+
+
+## OAuth2认证过程的错误处理
+
+加入你的 redirect_uri 对应的 views 处理函数为 callback， 如下所示：
+
+    from socialoauth import socialsites
+    from socialoauth.utils import import_oauth_class
+    from socialoauth.exception import SocialAPIError
+    
+    def callback(reqest, sitename):
+        # sitename 参数就是从 redirect_uri 中取得的
+        # 比如 我在 settings.py.example 中设置的那样
+        # renren 的 redirect_uri 为 http://test.org/account/oauth/renren
+        # 那用web框架url的处理功能把 renren 取出来，作为sitename 传递给 callback 函数
+        
+        # request 是一个http请求，不同web框架传递此对象的方式不一样
+        
+        code = request.GET.get('code')
+        if not code:
+            # 认证返回的params中没有code，肯定出错了
+            # 重定向到某处，再做处理
+            redirect('/SOME_WHERE')
+            
+        s = import_oauth_class(socialsites[sitename])()
+        
+        # 用code去换取认证的access_token
+        try:
+            s.get_access_token(code)
+        except SocialAPIError as e:
+            # 这里可能会出错
+            # e.site_name      - 哪个站点的OAuth2发生错误？
+            # e.url            - 当时请求的url
+            # e.code           - http response code (不是api返回的错误代码)
+            # e.error_msg      - 这里才是由api返回的错误信息, string
+            
+            # 就在这里处理错误
+            
+        # 到这里就处理完毕，并且取到了用户的部分信息： uid, name, avatar
+        # 腾讯的 uid 是他所说的openid，是 string，其他站点的uid都是 int
+
+
 
 
 ## settings.py
@@ -201,27 +274,11 @@ example中有个简单的session机制，
 
 
 
-## 注意
+## 吐槽
 
-socialoauth 得知道有哪些站点，以及这些站点各自的设置。所以 以下代码 **必须** 在项目启动
-的时候就要运行
-
-    from settings import SOCIALOAUTH_SITES
-    from socialoauth import socialsites
-    
-    socialsites.config(SOCIALOAUTH_SITES)
+*   新浪微博，腾讯的文档是最好的。
+*   人人网文档虽然内容丰富，但层次略混乱
+*   豆瓣文档太简陋
+*   搜狐文档就是个渣！！！ 都不想添加搜狐支持了
 
 
-然后在后续的代码中 只要同样 `from socialoauth import socialsites` 就可以得到配置的站点信息
-
-    # 取某一站点的设置
-    config = socialsites.load_config('socialoauth.sites.renren.RenRen')
-    
-    # 列出全部配置的站点模块
-    socialsites.list_sites()
-    # ['socialoauth.sites.renren.RenRen', 'socialoauth.sites.weibo.Weibo'...]
-    
-    # 取某站点名字对于的OAuth2类
-    socialsites['renren']
-    # 'socialoauth.sites.renren.RenRen'
-    

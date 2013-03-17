@@ -5,8 +5,18 @@ import urllib2
 import json
 
 
-from socialoauth.exception import SocialGetTokenError, SocialAPIError
+from socialoauth.exception import SocialAPIError
 from socialoauth import socialsites
+
+
+
+def _api_error_handler(func):
+    def deco(self, *args, **kwargs):
+        try:
+            return func(self, *args, **kwargs)
+        except urllib2.HTTPError as e:
+            raise SocialAPIError(self.site_name, e.url, e.code, e.read())
+    return deco
 
 
 class OAuth2(object):
@@ -45,7 +55,7 @@ class OAuth2(object):
             setattr(self, k, v)
             
     
-    
+    @_api_error_handler
     def http_get(self, url, data, parse=True):
         req = urllib2.Request('%s?%s' % (url, urlencode(data)))
         self.http_add_header(req)
@@ -55,6 +65,7 @@ class OAuth2(object):
         return res
     
     
+    @_api_error_handler
     def http_post(self, url, data, parse=True):
         req = urllib2.Request(url, data=urlencode(data))
         self.http_add_header(req)
@@ -97,13 +108,10 @@ class OAuth2(object):
         }
         
         
-        try:
-            if method == 'POST':
-                res = self.http_post(self.ACCESS_TOKEN_URL, data, parse=parse)
-            else:
-                res = self.http_get(self.ACCESS_TOKEN_URL, data, parse=parse)
-        except urllib2.HTTPError:
-            raise SocialGetTokenError
+        if method == 'POST':
+            res = self.http_post(self.ACCESS_TOKEN_URL, data, parse=parse)
+        else:
+            res = self.http_get(self.ACCESS_TOKEN_URL, data, parse=parse)
         
         self.parse_token_response(res)
         

@@ -13,6 +13,7 @@ IMAGE_PATH = os.path.join(CURRENT_PATH, 'images')
 from settings import SOCIALOAUTH_SITES
 from socialoauth import socialsites
 from socialoauth.utils import import_oauth_class
+from socialoauth.exception import SocialAPIError
 
 from helper import Session, UserStorage, gen_session_id
 
@@ -65,11 +66,15 @@ def index():
 @app.get('/login')
 def login():
     def _link(s):
-        m = import_oauth_class(s)
-        _s = m()
+        _s = import_oauth_class(s)()
+        if os.path.exists(os.path.join(IMAGE_PATH, _s.site_name + '.png')):
+            a_content = '<img src="/static/images/%s.png" />' % _s.site_name
+        else:
+            a_content = '使用 %s 登录' % _s.site_name
+        
         return """<div style="margin: 20px;">
-        <a href="%s"><img src="/static/images/%s.png" /></a>
-        </div>""" % (_s.authorize_url, _s.site_name)
+        <a href="%s">%s</a>
+        </div>""" % (_s.authorize_url, a_content)
     
     links = map(_link, socialsites.list_sites())
     links = '\n'.join(links)
@@ -93,7 +98,15 @@ def callback(sitename):
         redirect('/oautherror')
     
     s = import_oauth_class(socialsites[sitename])()
-    s.get_access_token(code)
+    try:
+        s.get_access_token(code)
+    except SocialAPIError as e:
+        # 这里可能会发生错误
+        print e.site_name      # 哪个站点的OAuth2发生错误？
+        print e.url            # 请求的url
+        print e.code           # http response code
+        print e.error_msg      # 由站点返回的错误信息
+        raise
     
     # 到这里授权完毕，并且取到了用户信息，uid, name, avatar...
     storage = UserStorage()

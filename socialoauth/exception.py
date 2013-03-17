@@ -4,14 +4,16 @@ class SocialOAuthException(Exception):
     pass
 
 
-class SocialConfigError(SocialOAuthException):
+class SocialConfigError(Exception):
     pass
 
 
-class SocialGetTokenError(SocialOAuthException):
-    """Occurred when get Access Token"""
-    pass
 
 class SocialAPIError(SocialOAuthException):
     """Occurred when doing API call"""
-    pass
+    def __init__(self, site_name, url, code, error_msg, *args, **kwargs):
+        self.site_name = site_name
+        self.url = url
+        self.code = code
+        self.error_msg = error_msg
+        SocialOAuthException.__init__(self, error_msg, *args, **kwargs)
