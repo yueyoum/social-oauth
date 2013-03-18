@@ -7,7 +7,7 @@ Python Package For SNS sites with OAuth2 support
 
 # feature
 
-*   易于扩展 [如何扩展](#-4)
+*   [易于扩展](#-3)
 *   统一的接口
     
     *   各个站点，都有 `uid`, `name`, `avatar`, 属性
@@ -16,12 +16,13 @@ Python Package For SNS sites with OAuth2 support
 *   统一的错误处理
 
     `api_http_get` 和 `api_http_post` 都可能引发异常，
+    
     应用程序只要 `try ... except SocialAPIError as e` 就能得到一致的错误信息：
     
-    *   e.site_name     哪个站点发生错误
-    *   e.url           发生错误是请求的url
-    *   e.code          http response code (不是api返回的错误代码)
-    *   e.error_msg     由站点返回的错误信息
+    *   `e.site_name`     哪个站点发生错误
+    *   `e.url`           发生错误是请求的url
+    *   `e.code`          http response code (不是api返回的错误代码)
+    *   `e.error_msg`     由站点返回的错误信息
 
 
 
