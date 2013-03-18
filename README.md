@@ -1,17 +1,31 @@
 # socialoauth
 
-python package for SNS sites with OAuth2 support
+Python Package For SNS sites with OAuth2 support
 
-## 简介
-
-socialoauth 专注于中国大陆开放了OAuth2认证的网站，并且着重使用了 **用第三方帐号登录** 的功能。
-为了将大量用户方便的导入到自己的网站，免去再次注册的麻烦。
-
-但socialoauth也是很容易扩展的：
-**对于支持OAuth2的网站，只需要一个子类重写3个（或更多）方法即可** [如何扩展](#-4)
+`socialoauth` 专注于中国大陆开放了OAuth2认证的网站
 
 
-## Supported sites
+# feature
+
+*   易于扩展 [如何扩展](#-4)
+*   统一的接口
+    
+    *   各个站点，都有 `uid`, `name`, `avatar`, 属性
+    *   各个站点，都有统一的 `api_http_get` 和 `api_http_post` 接口
+
+*   统一的错误处理
+
+    `api_http_get` 和 `api_http_post` 都可能引发异常，
+    应用程序只要 `try ... except SocialAPIError as e` 就能得到一致的错误信息：
+    
+    *   e.site_name     哪个站点发生错误
+    *   e.url           发生错误是请求的url
+    *   e.code          http response code (不是api返回的错误代码)
+    *   e.error_msg     由站点返回的错误信息
+
+
+
+# Supported sites
 
 *   人人
 *   腾讯
@@ -24,7 +38,7 @@ socialoauth 专注于中国大陆开放了OAuth2认证的网站，并且着重�
 
 
 
-## Install
+# Install
 
 ```bash
 pip install socialoauth
@@ -38,7 +52,7 @@ python setup.py install
 
 
 
-## Example
+# Example
 
 快速体验 socialoauth
 
@@ -59,22 +73,22 @@ python index.py
 下面是我用 人人网 帐号登录的过程：
 
 
-#### 初始情况，首页只有一个 login 链接
+##### 初始情况，首页只有一个 login 链接
 
 ![step1](http://i1297.photobucket.com/albums/ag23/yueyoum/x1_shadowed_zpsac1e046a.png)
 
 
-#### 点击后，根据settings.py中的设置，显示可用的认证网站
+##### 点击后，根据settings.py中的设置，显示可用的认证网站
 
 ![step2](http://i1297.photobucket.com/albums/ag23/yueyoum/x2_shadowed_zps47bd6fd8.png)
 
 
-#### 我用人人网帐号进行测试，点击后，转到人人登录认证的界面
+##### 我用人人网帐号进行测试，点击后，转到人人登录认证的界面
 
 ![step3](http://i1297.photobucket.com/albums/ag23/yueyoum/x4_shadowed_zps6aed31ec.png)
 
 
-#### 认证完毕后，就会显示用户的名字和小头像。
+##### 认证完毕后，就会显示用户的名字和小头像。
 example中有个简单的session机制，
 此时再打开首页（不关闭浏览器）就不用再登录，会直接显示名字和头像
 
@@ -82,7 +96,7 @@ example中有个简单的session机制，
 
 
 
-## 注意
+# 注意
 
 socialoauth 得知道有哪些站点，以及这些站点各自的设置。所以 以下代码 **必须** 在项目启动
 的时候就要运行
@@ -112,7 +126,7 @@ socialsites['renren']
     
 
 
-## OAuth2认证过程的错误处理
+# OAuth2认证过程的错误处理
 
 假如你的 redirect_uri 对应的 views 处理函数为 callback， 如下所示：
 
@@ -122,43 +136,43 @@ from socialoauth.utils import import_oauth_class
 from socialoauth.exception import SocialAPIError
 
 def callback(reqest, sitename):
-# sitename 参数就是从 redirect_uri 中取得的
-# 比如 我在 settings.py.example 中设置的那样
-# renren 的 redirect_uri 为 http://test.org/account/oauth/renren
-# 那用web框架url的处理功能把 renren 取出来，作为sitename 传递给 callback 函数
-
-# request 是一个http请求对象，不同web框架传递此对象的方式不一样
-
-# 网站在用户点击认证后，会跳转到 redirect_uri， 形式是 http://REDIRECT_URI?code=xxx
-# 所以这里要取到get param code
-code = request.GET.get('code')
-if not code:
-    # 认证返回的params中没有code，肯定出错了
-    # 重定向到某处，再做处理
-    redirect('/SOME_WHERE')
+    # sitename 参数就是从 redirect_uri 中取得的
+    # 比如 我在 settings.py.example 中设置的那样
+    # renren 的 redirect_uri 为 http://test.org/account/oauth/renren
+    # 那用web框架url的处理功能把 renren 取出来，作为sitename 传递给 callback 函数
     
-s = import_oauth_class(socialsites[sitename])()
-
-# 用code去换取认证的access_token
-try:
-    s.get_access_token(code)
-except SocialAPIError as e:
-    # 这里可能会出错
-    # e.site_name      - 哪个站点的OAuth2发生错误？
-    # e.url            - 当时请求的url
-    # e.code           - http response code (不是api返回的错误代码)
-    # e.error_msg      - 这里才是由api返回的错误信息, string
+    # request 是一个http请求对象，不同web框架传递此对象的方式不一样
     
-    # 就在这里处理错误
+    # 网站在用户点击认证后，会跳转到 redirect_uri， 形式是 http://REDIRECT_URI?code=xxx
+    # 所以这里要取到get param code
+    code = request.GET.get('code')
+    if not code:
+        # 认证返回的params中没有code，肯定出错了
+        # 重定向到某处，再做处理
+        redirect('/SOME_WHERE')
+        
+    s = import_oauth_class(socialsites[sitename])()
     
-# 到这里就处理完毕，并且取到了用户的部分信息： uid, name, avatar
-# 腾讯的 uid 是他所说的openid，是 string，其他站点的uid都是 int
+    # 用code去换取认证的access_token
+    try:
+        s.get_access_token(code)
+    except SocialAPIError as e:
+        # 这里可能会出错
+        # e.site_name      - 哪个站点的OAuth2发生错误？
+        # e.url            - 当时请求的url
+        # e.code           - http response code (不是api返回的错误代码)
+        # e.error_msg      - 这里才是由api返回的错误信息, string
+        
+        # 就在这里处理错误
+        
+    # 到这里就处理完毕，并且取到了用户的部分信息： uid, name, avatar
+    # 腾讯的 uid 是他所说的openid，是 string，其他站点的uid都是 int
 ```
 
 
 
 
-## settings.py
+# settings.py
 
 这就是配置文件，其实在你的应用中你可以随意换其他名字。
 
@@ -210,6 +224,16 @@ SOCIALOAUTH_SITES = {
 
 *   key 为站点的名字，你可以随意取名字，但必须和 回调地址 `redirect_uri` 中的 站点标识 一样
 
+    比如上面设置中的 `douban`，这个名字就必须和 redirect_uri 中的最后的名字一样，
+    所以你也可以这样修改：
+        
+        'nimei': ('xxx'
+                 {
+                    'redirect_uri': 'http://test.org/account/oauth/nimei',
+                 }
+        )
+        
+
 *   value 为tuple
 
     *   第一个元素指定此站点的 OAuth2 类的 包结构关系
@@ -225,7 +249,7 @@ SOCIALOAUTH_SITES = {
         
         
         
-## 如何扩展
+# 如何扩展
 
 要添加新的站点，正常网站只需要简单几步。（不正常网站比如腾讯，那就得多几步！）
 
