@@ -1,5 +1,8 @@
 include LICENSE
 include MANIFEST.in
+include ChangeLog
+include doc.md
+include README.txt
 recursive-include example *
 recursive-include example/images *
 recursive-exclude * *.pyc

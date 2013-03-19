@@ -20,6 +20,6 @@ Supported the following sites (and the list are growing):
 
 Usage:
 
-See REAME.md & example
+See doc.md & example
 
 github: https://github.com/yueyoum/social-oauth
