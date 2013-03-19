@@ -8,6 +8,7 @@ class RenRen(OAuth2):
     ACCESS_TOKEN_URL = 'http://graph.renren.com/oauth/token'
     
     RENREN_API_URL = 'https://api.renren.com/restserver.do'
+    RESPONSE_ERROR_KEY = 'error_code'
     
     
     def build_api_url(self, *args):

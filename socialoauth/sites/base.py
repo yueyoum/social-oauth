@@ -15,11 +15,17 @@ def _http_error_handler(func):
     @wraps(func)
     def deco(self, *args, **kwargs):
         try:
-            return func(self, *args, **kwargs)
+            res = func(self, *args, **kwargs)
         except urllib2.HTTPError as e:
-            raise SocialAPIError(self.site_name, e.url, e.code, e.reason, e.read())
+            raise SocialAPIError(self.site_name, e.url, e.read())
         except urllib2.URLError as e:
-            raise SocialAPIError(self.site_name, None, None, e.reason, e.reason)
+            raise SocialAPIError(self.site_name, args[0], e.reason)
+        
+        error_key = getattr(self, 'RESPONSE_ERROR_KEY', None)
+        if error_key is not None and error_key in res:
+            raise SocialAPIError(self.site_name, args[0], res)
+        
+        return res
     return deco
 
 

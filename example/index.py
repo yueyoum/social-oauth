@@ -105,8 +105,7 @@ def callback(sitename):
         # 这里可能会发生错误
         print e.site_name      # 哪个站点的OAuth2发生错误？
         print e.url            # 请求的url
-        print e.code           # http response code
-        print e.error_msg      # 由站点返回的错误信息
+        print e.error_msg      # 由站点返回的错误信息 / urllib2 的错误信息
         raise
     
     # 到这里授权完毕，并且取到了用户信息，uid, name, avatar...
@@ -125,10 +124,6 @@ def callback(sitename):
     session.set(session_id, uid=UID)
     response.set_cookie('session_id', session_id)
     
-    #print storage.user
-    #print storage.table
-    #
-    #print session._sessions
     
     
     redirect('/')

@@ -23,6 +23,7 @@ class KaiXin(OAuth2):
     def parse_token_response(self, res):
         self.access_token = res['access_token']
         self.expires_in = res['expires_in']
+        self.refresh_token = res['refresh_token']
         
         res = self.api_call_get('/users/me.json')
         

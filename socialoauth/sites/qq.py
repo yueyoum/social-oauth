@@ -3,6 +3,7 @@ import re
 import json
 
 from socialoauth.sites.base import OAuth2
+from socialoauth.exception import SocialAPIError
 
 
 QQ_OPENID_PATTERN = re.compile('\{.+\}')
@@ -45,15 +46,17 @@ class QQ(OAuth2):
         
         self.access_token = res['access_token']
         self.expires_in = int(res['expires_in'])
+        self.refresh_token = None
         
         res = self.http_get(self.OPENID_URL, {'access_token': self.access_token}, parse=False)
         res = json.loads(QQ_OPENID_PATTERN.search(res).group())
         
         self.uid = res['openid']
         
-        res = self.api_call_get(
-            'https://graph.qq.com/user/get_user_info',
-        )
+        _url = 'https://graph.qq.com/user/get_user_info'
+        res = self.api_call_get(_url)
+        if res['ret'] != 0:
+            raise SocialAPIError(self.site_name, _url, res)
         
         
         self.name = res['nickname']
