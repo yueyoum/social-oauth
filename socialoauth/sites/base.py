@@ -52,7 +52,15 @@ class OAuth2(object):
     """
 
     def __init__(self):
-        """Get config from settings"""
+        """Get config from settings.
+        class instance will have the following properties:
+        
+        site_name
+        site_id
+        REDIRECT_URI
+        CLIENT_ID
+        CLIENT_SECRET
+        """
         key = '%s.%s' % (self.__class__.__module__, self.__class__.__name__)
         configs = socialsites.load_config(key)
         for k, v in configs.iteritems():
