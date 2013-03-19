@@ -43,7 +43,7 @@ class Settings(object):
             _module_class, _site_id, _site_config = v
             if _site_id in self._sites_id_name_table:
                 raise SocialConfigError(
-                    "Duplicate site id %d with site name %s" % _site_id, k
+                    "Duplicate site id %d with site name %s" % (_site_id, k)
                 )
             self._sites_id_name_table[_site_id] = k
             

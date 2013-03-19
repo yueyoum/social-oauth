@@ -128,7 +128,7 @@ SOCIALOAUTH_SITES = {
 
 可以参考 `example/index.py` 中的例子
 
-基本过程分为一下几步，我们假设你注意到了顶部 **项目初始化**，并正确载入了配置。
+基本过程分为以下几步，我们假设你注意到了顶部 **项目初始化**，并正确载入了配置。
 并且 有一个站点： `s = socialsites.list_sites()[0]`
 
 1.  得到 引导用户 授权的url
@@ -140,12 +140,12 @@ SOCIALOAUTH_SITES = {
     authorize_url = s.authorize_url
     ```
     
-2.  引导用户授权后，浏览器会跳转到你设置的 redirect_uri，在这里要取到 access_code
+2.  引导用户授权后，浏览器会跳转到你设置的 `redirect_uri`，在这里要取到 `access_code`,
     并且进一步用 `access_code` 换取到 `access_token`.
     
     *注意这里的错误处理*
 
-    假如你的 redirect_uri 对应的 views 处理函数为 callback， 如下所示：
+    假如你的 `redirect_uri` 对应的 views 处理函数为 `callback`， 如下所示：
     
     ```python
     from socialoauth import socialsites
@@ -187,9 +187,9 @@ SOCIALOAUTH_SITES = {
 
 3.  第二步顺利过完，整个流程也就结束了。
 
-    *   如果只需要 *第三方登录* 这个功能，这里取到了用户基本信息。也就足够了
-    *   如果还要更进一步操作更多用户资源，那么就要保存 `s.access_token` 作为后续调用API所用
-    *   这里取到的 `uid` 是字符串，目前除了腾讯的openid，其他站点的都可以转为int
+*   如果只需要 *第三方登录* 这个功能，这里取到了用户基本信息。也就足够了
+*   如果还要更进一步操作更多用户资源，那么就要保存 `s.access_token` 作为后续调用API所用
+*   这里取到的 `uid` 是字符串，目前除了腾讯的openid，其他站点的都可以转为int
 
 
 

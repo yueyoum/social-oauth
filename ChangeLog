@@ -1,0 +1,13 @@
+2013-03-19  Wang Chao <yueyoum@gmail.com>
+
+    *   Version 0.2.0
+    *   Change the settings.py format, add site_id
+    *   Set timeout in urllib2.urlopen
+    *   More robustness, Catch more errors
+    *   Create doc.md
+
+
+
+2013-03-17  Wang Chao <yueyoum@gmail.com>
+
+    *   Version 0.1.0.  First release.
