@@ -5,7 +5,7 @@ Python Package For SNS sites with OAuth2 support
 `socialoauth` 专注于中国大陆开放了OAuth2认证的网站
 
 
-# feature
+# Feature
 
 *   [易于扩展](#-3)
 *   统一的接口
@@ -19,10 +19,15 @@ Python Package For SNS sites with OAuth2 support
     
     应用程序只要 `try ... except SocialAPIError as e` 就能得到一致的错误信息：
     
-    *   `e.site_name`     哪个站点发生错误
-    *   `e.url`           发生错误是请求的url
-    *   `e.code`          http response code (不是api返回的错误代码)
-    *   `e.error_msg`     由站点返回的错误信息
+    *   `e.site_name`         哪个站点发生错误
+    *   `e.url`               发生错误是请求的url
+    *   `e.code`              http response code (不是api返回的错误代码)
+    *   `e.reason`            urllib2 异常的 reason
+    *   `e.api_error_msg`     由站点返回的错误信息
+
+    ##### 说明
+    如果是urllib2.URLError (比如由timeout引发)，则 `e.url`, `e.code` 为 None.
+    `e.api_error_msg` 和 `e.reason` 一样.
 
 
 
