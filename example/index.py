@@ -46,10 +46,11 @@ def index():
             <html>
                 <body>
                 <h2>Welcome. %s</h2>
+                <p>you from %s, and your social id is %s<p>
                 <img src="%s" />
                 <p><a href="/logout">Logout</a></p>
                 </body>
-            </html>""" % (user['name'], user['avatar'])
+            </html>""" % (user['name'], user['site_name'], user['uid'], user['avatar'])
             
             return html
     
@@ -116,7 +117,15 @@ def callback(sitename):
         UID = storage.bind_new_user(s.site_name, s.uid)
         
     
-    storage.set_user(UID, name=s.name, avatar=s.avatar)
+    storage.set_user(
+        UID,
+        site_name = s.site_name,
+        site_id = s.site_id,
+        uid = s.uid,
+        name = s.name,
+        avatar = s.avatar
+    )
+    
     session_id = request.get_cookie('session_id')
     if not session_id:
         session_id = Session.make_session_id(UID)

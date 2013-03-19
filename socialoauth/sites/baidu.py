@@ -30,7 +30,7 @@ class Baidu(OAuth2):
         
         res = self.api_call_get('passport/users/getLoggedInUser')
         
-        self.uid = int(res['uid'])
+        self.uid = res['uid']
         self.name = res['uname']
         self.avatar = '%s%s' % (self.SMALL_IMAGE, res['portrait'])
         self.avatar_large = '%s%s' % (self.LARGE_IMAGE, res['portrait'])

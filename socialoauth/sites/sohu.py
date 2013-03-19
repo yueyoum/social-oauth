@@ -40,7 +40,7 @@ class Sohu(OAuth2):
         
         res = self.api_call_get('users/show.json')
         
-        self.uid = int(res['id'])
+        self.uid = res['id']
         self.name = res['screen_name']
         self.avatar = res['profile_image_url']
         self.avatar_large = ""

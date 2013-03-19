@@ -25,7 +25,7 @@ class DouBan(OAuth2):
         
     
     def parse_token_response(self, res):
-        self.uid = int(res['douban_user_id'])
+        self.uid = res['douban_user_id']
         self.access_token = res['access_token']
         self.expires_in = res['expires_in']
         self.refresh_token = res['refresh_token']

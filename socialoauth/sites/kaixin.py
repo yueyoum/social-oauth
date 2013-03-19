@@ -27,7 +27,7 @@ class KaiXin(OAuth2):
         
         res = self.api_call_get('/users/me.json')
         
-        self.uid = int(res['uid'])
+        self.uid = res['uid']
         self.name = res['name']
         self.avatar = res['logo50']
         self.avatar_large = ""

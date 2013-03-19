@@ -19,7 +19,7 @@ class Weibo(OAuth2):
         return data
     
     def parse_token_response(self, res):
-        self.uid = int(res['uid'])
+        self.uid = res['uid']
         self.access_token = res['access_token']
         self.expires_in = res['expires_in']
         self.refresh_token = None

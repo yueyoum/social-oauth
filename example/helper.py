@@ -50,11 +50,11 @@ class UserStorage(object):
         return self.ID
     
     
-    def get_user(self, uid):
-        return self.user[uid]
+    def get_user(self, inner_uid):
+        return self.user[inner_uid]
     
-    def set_user(self, uid, **kwargs):
-        self.user[uid] = kwargs
+    def set_user(self, inner_uid, **kwargs):
+        self.user[inner_uid] = kwargs
 
 
 
