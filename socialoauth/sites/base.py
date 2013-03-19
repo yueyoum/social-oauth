@@ -8,6 +8,7 @@ from functools import wraps
 from socialoauth.exception import SocialAPIError
 from socialoauth import socialsites
 
+HTTP_TIMEOUT = 10
 
 
 def _http_error_handler(func):
@@ -16,7 +17,9 @@ def _http_error_handler(func):
         try:
             return func(self, *args, **kwargs)
         except urllib2.HTTPError as e:
-            raise SocialAPIError(self.site_name, e.url, e.code, e.read())
+            raise SocialAPIError(self.site_name, e.url, e.code, e.reason, e.read())
+        except urllib2.URLError as e:
+            raise SocialAPIError(self.site_name, None, None, e.reason, e.reason)
     return deco
 
 
@@ -49,6 +52,7 @@ class OAuth2(object):
     """
 
     def __init__(self):
+        """Get config from settings"""
         key = '%s.%s' % (self.__class__.__module__, self.__class__.__name__)
         configs = socialsites.load_config(key)
         for k, v in configs.iteritems():
@@ -59,7 +63,7 @@ class OAuth2(object):
     def http_get(self, url, data, parse=True):
         req = urllib2.Request('%s?%s' % (url, urlencode(data)))
         self.http_add_header(req)
-        res = urllib2.urlopen(req).read()
+        res = urllib2.urlopen(req, timeout=HTTP_TIMEOUT).read()
         if parse:
             return json.loads(res)
         return res
@@ -69,7 +73,7 @@ class OAuth2(object):
     def http_post(self, url, data, parse=True):
         req = urllib2.Request(url, data=urlencode(data))
         self.http_add_header(req)
-        res = urllib2.urlopen(req).read()
+        res = urllib2.urlopen(req, timeout=HTTP_TIMEOUT).read()
         if parse:
             return json.loads(res)
         return res
@@ -83,6 +87,17 @@ class OAuth2(object):
 
     @property
     def authorize_url(self):
+        """Rewrite this property method If there are more arguments
+        need  attach to the url. Like bellow:
+
+            class NewSubClass(OAuth2):
+                @property
+                def authorize_url(self):
+                    url = super(NewSubClass, self).authorize_url
+                    url += '&blabla'
+                    return url
+        """
+
         url = "%s?client_id=%s&response_type=code&redirect_uri=%s" % (
             self.AUTHORIZE_URL, self.CLIENT_ID, self.REDIRECT_URI
         )
@@ -95,6 +110,17 @@ class OAuth2(object):
 
 
     def get_access_token(self, code, method='POST', parse=True):
+        """parse is True means that the api return a json string. 
+        So, the result will be parsed by json library.
+        Most sites will follow this rule, return a json string.
+        But some sites (e.g. Tencent), Will return an non json string,
+        This sites MUST set parse=False when call this method,
+        And handle the result by themselves.
+
+        This method Maybe raise SocialAPIError.
+        Application MUST try this Exception.
+        """
+
         data = {
             'client_id': self.CLIENT_ID,
             'client_secret': self.CLIENT_SECRET,
@@ -128,10 +154,13 @@ class OAuth2(object):
 
     def parse_token_response(self, res):
         """
-        Subclass MUST implement this function
+        Subclass MUST implement this method
         And set the following attributes:
 
-        access_token, uid, name, avatar, avatar_large
+        access_token,
+        uid,
+        name,
+        avatar,
         """
         raise NotImplementedError
 
@@ -142,3 +171,4 @@ class OAuth2(object):
 
     def build_api_data(self, **kwargs):
         raise NotImplementedError
+
