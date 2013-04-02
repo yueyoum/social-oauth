@@ -1,6 +1,25 @@
 # socialoauth
 
-##### 欢迎使用 socialoauth，目前版本 0.2.0，更新于 2013-3-19
+##### 欢迎使用 socialoauth，目前版本 0.2.2，更新于 2013-04-02
+
+
+## 属性
+
+对于一个站点Class的实例，拥有一下属性：
+
+    site_id
+    site_name
+    site_name_zh
+    
+如果这个实例在用户认证完毕，成功调用 `get_access_token` 后，还会拥有下列属性
+
+    uid             -   此站点上的用户uid
+    username        -   名字
+    avatar          -   小头像 （各个站点尺寸不一，大概为50x50）
+    access_token    -   用于调用API
+
+
+
 
 
 ## 项目初始化
@@ -43,7 +62,7 @@ socialsites['renren']
 
 ```python
 SOCIALOAUTH_SITES = {
-    'renren': ('socialoauth.sites.renren.RenRen', 1,
+    'renren': ('socialoauth.sites.renren.RenRen', 1, '人人网',
                {
                 'redirect_uri': 'http://test.org/account/oauth/renren',
                 'client_id': 'YOUR ID',
@@ -52,7 +71,7 @@ SOCIALOAUTH_SITES = {
                }
     ),
         
-    'weibo': ('socialoauth.sites.weibo.Weibo', 2,
+    'weibo': ('socialoauth.sites.weibo.Weibo', 2, '新浪微博',
               {
                 'redirect_uri': 'http://test.org/account/oauth/weibo',
                 'client_id': 'YOUR ID',
@@ -60,7 +79,7 @@ SOCIALOAUTH_SITES = {
               }
     ),
     
-    'qq': ('socialoauth.sites.qq.QQ', 3,
+    'qq': ('socialoauth.sites.qq.QQ', 3, 'QQ帐号',
               {
                 'redirect_uri': 'http://test.org/account/oauth/qq',
                 'client_id': 'YOUR ID',
@@ -68,7 +87,7 @@ SOCIALOAUTH_SITES = {
               }
     ),
         
-    'douban': ('socialoauth.sites.douban.DouBan', 4,
+    'douban': ('socialoauth.sites.douban.DouBan', 4, '豆瓣',
               {
                 'redirect_uri': 'http://test.org/account/oauth/douban',
                 'client_id': 'YOUR ID',
@@ -84,7 +103,7 @@ SOCIALOAUTH_SITES = {
 
 ```python
 SOCIALOAUTH_SITES = {
-    site_name: (site_oauth2_module_class_path,  site_id,
+    site_name: (site_oauth2_module_class_path,  site_id, site_name_zh,
                 site_oauth2_parameter
     )
 }
@@ -112,7 +131,9 @@ SOCIALOAUTH_SITES = {
     
     *   第二个元素是站点标识ID (用于在数据库中表明是哪一个站点)
     
-    *   第三个元素为字典，里面设置了一个OAuth2应用必须的设置项。
+    *   第三个元素是站点中文名字，可以用于在web页面上显示
+    
+    *   第四个元素为字典，里面设置了一个OAuth2应用必须的设置项。
     
         *   `client_id`, `client_secret`是申请开发者，创建好应用后的值
         
