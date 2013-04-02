@@ -72,7 +72,7 @@ def login():
         if os.path.exists(os.path.join(IMAGE_PATH, _s.site_name + '.png')):
             a_content = '<img src="/static/images/%s.png" />' % _s.site_name
         else:
-            a_content = '使用 %s 登录' % _s.site_name
+            a_content = '使用 %s 登录' % _s.site_name_zh
         
         return """<div style="margin: 20px;">
         <a href="%s">%s</a>
@@ -165,6 +165,5 @@ def oautherror():
     redirect('/')
     
     
-if __name__ == '__main__':    
-    run(app)
-    
+if __name__ == '__main__':
+    run(app, port=8000)

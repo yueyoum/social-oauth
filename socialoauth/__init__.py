@@ -3,7 +3,7 @@
 from socialoauth.exception import SocialConfigError
 
 
-version_info = (0, 2, 0)
+version_info = (0, 2, 2)
 VERSION = __version__ = '.'.join( map(str, version_info) )
 
 
@@ -40,7 +40,7 @@ class Settings(object):
     def config(self, settings):
         """Call This method when application start"""
         for k, v in settings.iteritems():
-            _module_class, _site_id, _site_config = v
+            _module_class, _site_id, _site_name_zh, _site_config = v
             if _site_id in self._sites_id_name_table:
                 raise SocialConfigError(
                     "Duplicate site id %d with site name %s" % (_site_id, k)
@@ -49,7 +49,9 @@ class Settings(object):
             
             self._sites_name_class_table[k] = _module_class
             self._sites_class_config_table[_module_class] = {
-                'site_name': k, 'site_id': _site_id
+                'site_name': k,
+                'site_name_zh': _site_name_zh,
+                'site_id': _site_id,
             }
             
             for _k, _v in _site_config.iteritems():

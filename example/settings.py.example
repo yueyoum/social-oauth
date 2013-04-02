@@ -1,6 +1,7 @@
+# -*- coding: utf-8 -*-
 
 SOCIALOAUTH_SITES = {
-    'renren': ('socialoauth.sites.renren.RenRen', 1,
+    'renren': ('socialoauth.sites.renren.RenRen', 1, '人人网',
                {
                 'redirect_uri': 'http://test.org/account/oauth/renren',
                 'client_id': 'YOUR ID',
@@ -9,7 +10,7 @@ SOCIALOAUTH_SITES = {
                }
     ),
         
-    'weibo': ('socialoauth.sites.weibo.Weibo', 2,
+    'weibo': ('socialoauth.sites.weibo.Weibo', 2, '新浪微博',
               {
                 'redirect_uri': 'http://test.org/account/oauth/weibo',
                 'client_id': 'YOUR ID',
@@ -17,7 +18,7 @@ SOCIALOAUTH_SITES = {
               }
     ),
     
-    'qq': ('socialoauth.sites.qq.QQ', 3,
+    'qq': ('socialoauth.sites.qq.QQ', 3, 'QQ帐号',
               {
                 'redirect_uri': 'http://test.org/account/oauth/qq',
                 'client_id': 'YOUR ID',
@@ -25,7 +26,7 @@ SOCIALOAUTH_SITES = {
               }
     ),
         
-    'douban': ('socialoauth.sites.douban.DouBan', 4,
+    'douban': ('socialoauth.sites.douban.DouBan', 4, '豆瓣',
               {
                 'redirect_uri': 'http://test.org/account/oauth/douban',
                 'client_id': 'YOUR ID',
