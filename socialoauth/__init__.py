@@ -3,7 +3,7 @@
 from socialoauth.exception import SocialConfigError
 
 
-version_info = (0, 2, 2)
+version_info = (0, 2, 4)
 VERSION = __version__ = '.'.join( map(str, version_info) )
 
 
@@ -82,7 +82,7 @@ class Settings(object):
             raise SocialConfigError("No settings for site id : %d" % site_id)
         
     def get_site_class_by_id(self, site_id):
-        site_name = self.get_site_class_by_id(site_id)
+        site_name = self.get_site_name_by_id(site_id)
         return self.__getitem__(site_name)
         
         
