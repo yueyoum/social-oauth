@@ -4,7 +4,7 @@ class SocialOAuthException(Exception):
     pass
 
 
-class SocialConfigError(Exception):
+class SocialSitesConfigError(Exception):
     pass
 
 
