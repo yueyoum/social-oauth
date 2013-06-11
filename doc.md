@@ -2,7 +2,7 @@
 
 ##### 欢迎使用 socialoauth，目前版本 0.3.0，更新于 2013-06-11
 
-![版本历史](/ChangeLog.txt)
+![版本历史](/ChangeLog)
 
 
 ## 属性
@@ -12,7 +12,7 @@
     site_name
     site_name_zh
     
-这两个属性是在settings文件中配置的。![如何配置settings](#settingspy)
+这两个属性是在settings文件中配置的。![如何配置settings](#-settingspy)
 如果这个实例在用户认证完毕，成功调用 `get_access_token` 后，还会拥有下列属性
 
     uid             -   此站点上的用户uid
@@ -22,36 +22,10 @@
 
 
 
-## 项目初始化
+## 使用SocialSites类
 
-
-~~得知道有哪些站点，以及这些站点各自的设置。所以 以下代码 **必须** 在项目启动的时候就要运行~~
-~~
-```python
-from settings import SOCIALOAUTH_SITES
-from socialoauth import socialsites
-
-socialsites.config(SOCIALOAUTH_SITES)
-```
-
-然后在后续的代码中 只要同样 `from socialoauth import socialsites` 就可以得到配置的站点信息
-
-```python
-# 取某一站点的设置
-config = socialsites.load_config('socialoauth.sites.renren.RenRen')
-
-# 列出全部配置的站点模块
-socialsites.list_sites()
-# ['socialoauth.sites.renren.RenRen', 'socialoauth.sites.weibo.Weibo'...]
-
-# 取某站点名字对于的OAuth2类
-socialsites['renren']
-# 'socialoauth.sites.renren.RenRen'
-```
-~~
-
-自0.3.0版本后，上面的情况被废弃。现在不用在项目启动时就执行 `socialsites.config()`
-取而代之的是哪儿需要，就在哪儿实例化
+自0.3.0版本后，不用在项目初始化的时候调用 `socialuser.config()`.
+现在只在需要的地方调用即可
 
 ```python
 from socialoauth import SoicalSites
