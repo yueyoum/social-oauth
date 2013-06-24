@@ -60,6 +60,6 @@ class QQ(OAuth2):
 
 
         self.name = res['nickname']
-        self.avatar = res['figureurl_1']
-        self.avatar_large = res['figureurl_2']
+        self.avatar = res['figureurl_qq_1']
+        self.avatar_large = res['figureurl_qq_2']
 
