@@ -37,7 +37,7 @@ Python Package For SNS sites with OAuth2 support
 *   搜狐微博
 *   百度
 *   开心网
-*   淘宝 (Thanks for )
+*   淘宝
 
 
 ## Contributors

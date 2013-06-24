@@ -15,6 +15,7 @@ Supported the following sites (and the list are growing):
 *   sohu        (搜狐微博)
 *   baidu       (百度)
 *   kaixin001   (开心网)
+*   taobao      (淘宝网)
 
 
 

@@ -1,3 +1,9 @@
+2013-06-24 Jiequan <https://github.com/andelf>
+    *   Version 0.3.2
+    *   Add taobao support
+    *   QQ using QQ's avatar instead of QZone's avatar
+
+
 2013-06-11 Wang Chao <yueyoum@gmail.com>
     *   Version 0.3.0
     *   Change the settings.py format, remove site_id
@@ -7,7 +13,6 @@
 
 
 2013-03-19  Wang Chao <yueyoum@gmail.com>
-
     *   Version 0.2.0
     *   Change the settings.py format, add site_id
     *   Set timeout in urllib2.urlopen
@@ -15,7 +20,5 @@
     *   Create doc.md
 
 
-
 2013-03-17  Wang Chao <yueyoum@gmail.com>
-
     *   Version 0.1.0.  First release.
