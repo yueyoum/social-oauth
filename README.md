@@ -5,7 +5,7 @@ Python Package For SNS sites with OAuth2 support
 `socialoauth` 专注于中国大陆开放了OAuth2认证的网站
 
 
-# Feature
+## Feature
 
 *   易于扩展 ![参见doc.md](/doc.md)
 *   统一的接口
@@ -27,9 +27,7 @@ Python Package For SNS sites with OAuth2 support
     *   `e.api_error_msg`     由站点返回的错误信息 or urllib2 的错误信息
 
 
-
-
-# Supported sites
+## Supported sites
 
 *   人人
 *   腾讯
@@ -39,11 +37,19 @@ Python Package For SNS sites with OAuth2 support
 *   搜狐微博
 *   百度
 *   开心网
-*   淘宝 (Thanks for ![Jiequan](https://github.com/Jiequan))
+*   淘宝 (Thanks for )
 
 
+## Contributors
 
-# Install
+Thanks for this guys
+
+![Jiequan](https://github.com/Jiequan)
+![smilekzs](https://github.com/smilekzs)
+![andelf](https://github.com/andelf)
+
+
+## Install
 
 ```bash
 pip install socialoauth
@@ -57,7 +63,7 @@ python setup.py install
 
 
 
-# Example
+## Example
 
 快速体验 socialoauth
 
@@ -101,13 +107,9 @@ example中有个简单的session机制，
 
 
 
-# Document
+## Document
 
 ![参见doc.md](/doc.md)
-
-
-
-
 
 
 ## 吐槽
@@ -120,8 +122,6 @@ example中有个简单的session机制，
     
     *   [腾讯][tocao_tencent_1] 文档里说取code的时候，state 必须 参数，但发现不传一样
     *   [搜狐][tocao_souhu_1] 和上面一样， wrap_client_state 参数
-
-
 
 
 [tocao_tencent_1]: http://wiki.opensns.qq.com/wiki/【QQ登录】使用Authorization_Code获取Access_Token
