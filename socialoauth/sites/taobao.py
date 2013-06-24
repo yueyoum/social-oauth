@@ -11,7 +11,7 @@ class TaoBao(OAuth2):
     
     def build_api_url(self, url):
         return self.TAOBAO_API_URL
-    
+
     def build_api_data(self, **kwargs):
         data = {
             'access_token': self.access_token,
@@ -20,7 +20,7 @@ class TaoBao(OAuth2):
         }
         data.update(kwargs)
         return data
-    
+
     def parse_token_response(self, res):
         self.uid = res['taobao_user_id']
         self.access_token = res['access_token']
