@@ -11,6 +11,9 @@ Python Package For SNS sites with OAuth2 support
 *   统一的接口
     
     *   各个站点，都有 `uid`, `name`, `avatar`, 属性
+    
+        QQ 取回的 `avatar` 是40x40尺寸的，其余站点基本都是 48~50的尺寸
+
     *   各个站点，都有统一的 `api_http_get` 和 `api_http_post` 接口
 
 *   统一的错误处理
@@ -36,6 +39,7 @@ Python Package For SNS sites with OAuth2 support
 *   搜狐微博
 *   百度
 *   开心网
+*   淘宝 (Thanks for ![Jiequan](https://github.com/Jiequan))
 
 
 
