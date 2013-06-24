@@ -7,7 +7,7 @@ Python Package For SNS sites with OAuth2 support
 
 # Feature
 
-*   易于扩展 *参见doc.md*
+*   易于扩展 ![参见doc.md](/doc.md)
 *   统一的接口
     
     *   各个站点，都有 `uid`, `name`, `avatar`, 属性
@@ -67,7 +67,7 @@ cp settings.py.example settings.py
 python index.py
 ```
 
-如何配置 settings.py ?  *参见doc.md*
+如何配置 settings.py ?  ![参见doc.md](/doc.md)
 
 现在用浏览器打开对应的地址，就能体验相应的功能。
 
@@ -99,7 +99,7 @@ example中有个简单的session机制，
 
 # Document
 
-*参见doc.md*
+![参见doc.md](/doc.md)
 
 
 

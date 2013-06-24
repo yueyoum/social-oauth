@@ -5,10 +5,14 @@ import urllib2
 import json
 from functools import wraps
 
-from socialoauth.exception import SocialAPIError
-from socialoauth import socialsites
+from socialoauth.exception import SocialAPIError, SocialSitesConfigError
+from socialoauth import SocialSites
 
 HTTP_TIMEOUT = 10
+
+socialsites = SocialSites()
+if not socialsites._configed:
+    raise SocialSitesConfigError("SocialSites not configed yet, Do it first!")
 
 
 def _http_error_handler(func):
@@ -30,8 +34,7 @@ def _http_error_handler(func):
 
 
 class OAuth2(object):
-    """
-    Base OAuth2 class, Sub class must define the following settings:
+    """Base OAuth2 class, Sub class must define the following settings:
 
     AUTHORIZE_URL    - Asking user to authorize and get token
     ACCESS_TOKEN_URL - Get authorized access token
@@ -47,7 +50,6 @@ class OAuth2(object):
     SCOPE            - A list type contains some scopes
 
     Details see: http://tools.ietf.org/html/rfc6749
-
 
 
     SubClass MUST Implement the following three methods:
@@ -122,7 +124,6 @@ class OAuth2(object):
         return url
 
 
-
     def get_access_token(self, code, method='POST', parse=True):
         """parse is True means that the api return a json string. 
         So, the result will be parsed by json library.
@@ -152,7 +153,6 @@ class OAuth2(object):
         self.parse_token_response(res)
 
 
-
     def api_call_get(self, url=None, **kwargs):
         url = self.build_api_url(url)
         data = self.build_api_data(**kwargs)
@@ -162,8 +162,6 @@ class OAuth2(object):
         url = self.build_api_url(url)
         data = self.build_api_data(**kwargs)
         return self.http_post(url, data)
-
-
 
 
     def parse_token_response(self, res):
@@ -185,4 +183,3 @@ class OAuth2(object):
 
     def build_api_data(self, **kwargs):
         raise NotImplementedError
-

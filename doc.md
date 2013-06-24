@@ -1,16 +1,18 @@
 # socialoauth
 
-##### 欢迎使用 socialoauth，目前版本 0.2.2，更新于 2013-04-02
+##### 欢迎使用 socialoauth，目前版本 0.3.0，更新于 2013-06-11
+
+![版本历史](/ChangeLog)
 
 
 ## 属性
 
-对于一个站点Class的实例，拥有一下属性：
+对于一个站点的实例，用户需要关心的有以下属性：
 
-    site_id
     site_name
     site_name_zh
     
+这两个属性是在settings文件中配置的。![如何配置settings](#-settingspy)
 如果这个实例在用户认证完毕，成功调用 `get_access_token` 后，还会拥有下列属性
 
     uid             -   此站点上的用户uid
@@ -20,117 +22,93 @@
 
 
 
+## 使用SocialSites类
 
-
-## 项目初始化
-
-
-socialoauth 得知道有哪些站点，以及这些站点各自的设置。所以 以下代码 **必须** 在项目启动
-的时候就要运行
+自0.3.0版本后，不用在项目初始化的时候调用 `socialuser.config()`.
+现在只在需要的地方调用即可
 
 ```python
-from settings import SOCIALOAUTH_SITES
-from socialoauth import socialsites
-
-socialsites.config(SOCIALOAUTH_SITES)
+from socialoauth import SoicalSites
+def index():
+    socialsites = SoicalSites(SOCIALOAUTH_SITES)
+    
+    socialsites.list_sites_name()           # 列出全部的站点名字
+    socialsites.list_sites_class()          # 列出全部的站点Class名字
+    socialsites.get_site_object_by_name()   # 根据站点名字获取此站点实例
+    socialsites.get_site_object_by_class()  # 根据站点Class名字获取此站点实例
 ```
-
-
-然后在后续的代码中 只要同样 `from socialoauth import socialsites` 就可以得到配置的站点信息
-
-```python
-# 取某一站点的设置
-config = socialsites.load_config('socialoauth.sites.renren.RenRen')
-
-# 列出全部配置的站点模块
-socialsites.list_sites()
-# ['socialoauth.sites.renren.RenRen', 'socialoauth.sites.weibo.Weibo'...]
-
-# 取某站点名字对于的OAuth2类
-socialsites['renren']
-# 'socialoauth.sites.renren.RenRen'
-```
-
 
 
 ## 如何配置 settings.py
-
 
 这就是配置文件，其实在你的应用中你可以随意换其他名字。
 
 配置示例（模板参考 example/settings.py.example）:
 
 ```python
-SOCIALOAUTH_SITES = {
-    'renren': ('socialoauth.sites.renren.RenRen', 1, '人人网',
-               {
-                'redirect_uri': 'http://test.org/account/oauth/renren',
-                'client_id': 'YOUR ID',
-                'client_secret': 'YOUR SECRET',
-                'scope': ['publish_feed', 'status_update']
-               }
+SOCIALOAUTH_SITES = (
+    ('renren', 'socialoauth.sites.renren.RenRen', '人人',
+        {
+         'redirect_uri': 'http://test.codeshift.org/account/oauth/renren',
+         'client_id': 'YOUR ID',
+         'client_secret': 'YOUR SECRET',
+        }
     ),
-        
-    'weibo': ('socialoauth.sites.weibo.Weibo', 2, '新浪微博',
-              {
-                'redirect_uri': 'http://test.org/account/oauth/weibo',
-                'client_id': 'YOUR ID',
-                'client_secret': 'YOUR SECRET',
-              }
+
+    ('weibo', 'socialoauth.sites.weibo.Weibo', '新浪微博',
+        {
+          'redirect_uri': 'http://test.codeshift.org/account/oauth/weibo',
+          'client_id': 'YOUR ID',
+          'client_secret': 'YOUR SECRET',
+        }
     ),
-    
-    'qq': ('socialoauth.sites.qq.QQ', 3, 'QQ帐号',
-              {
-                'redirect_uri': 'http://test.org/account/oauth/qq',
-                'client_id': 'YOUR ID',
-                'client_secret': 'YOUR SECRET',
-              }
+
+    ('qq', 'socialoauth.sites.qq.QQ', 'QQ',
+        {
+          'redirect_uri': 'http://test.codeshift.org/account/oauth/qq',
+          'client_id': 'YOUR ID',
+          'client_secret': 'YOUR SECRET',
+        }
     ),
-        
-    'douban': ('socialoauth.sites.douban.DouBan', 4, '豆瓣',
-              {
-                'redirect_uri': 'http://test.org/account/oauth/douban',
-                'client_id': 'YOUR ID',
-                'client_secret': 'YOUR SECRET',
-                'scope': ['douban_basic_common']
-              }
+
+    ('douban', 'socialoauth.sites.douban.DouBan', '豆瓣',
+        {
+          'redirect_uri': 'http://test.codeshift.org/account/oauth/douban',
+          'client_id': 'YOUR ID',
+          'client_secret': 'YOUR SECRET',
+          'scope': ['douban_basic_common']
+        }
     ),
-    
-}
+)
 ```
 
 配置的 template 就是这样：
 
 ```python
-SOCIALOAUTH_SITES = {
-    site_name: (site_oauth2_module_class_path,  site_id, site_name_zh,
+SOCIALOAUTH_SITES = (
+    (site_name, site_oauth2_module_class_path, site_name_zh,
                 site_oauth2_parameter
     )
-}
 ```
 
 `SOCIALOAUTH_SITES` 是此配置的名字，同样，你也可以随意更改
 
-*   `SOCIALOAUTH_SITES` 是一个字典
+*   `SOCIALOAUTH_SITES` 是一个列表/元组，每个元素表示一个站点配置
 
-*   key 为站点的名字，你可以随意取名字，但必须和 回调地址 `redirect_uri` 中的 站点标识 一样
+*   每个站点的配置同样是列表/元组。
 
-    比如上面设置中的 `douban`，这个名字就必须和 redirect_uri 中的最后的名字一样，
-    所以你也可以这样修改：
-        
-        'nimei': ('xxx'
-                 {
-                    'redirect_uri': 'http://test.org/account/oauth/nimei',
-                 }
-        )
-        
+    *   第一个元素 站点名字。你可以随意取名字，但必须和 回调地址 `redirect_uri` 中的 站点标识 一样
+        比如上面设置中的 `douban`，这个名字就必须和 redirect_uri 中的最后的名字一样，
+        所以你也可以这样修改：
+            
+            'nimei': ('xxx'
+                     {
+                        'redirect_uri': 'http://test.org/account/oauth/nimei',
+                     }
+            )
 
-*   value 为tuple
+    *   第二个元素 指定此站点的 OAuth2 类的包结构关系路径
 
-    *   第一个元素指定此站点的 OAuth2 类的 包结构关系路径
-    
-    *   第二个元素是站点标识ID (用于在数据库中表明是哪一个站点)
-    
     *   第三个元素是站点中文名字，可以用于在web页面上显示
     
     *   第四个元素为字典，里面设置了一个OAuth2应用必须的设置项。
@@ -140,25 +118,22 @@ SOCIALOAUTH_SITES = {
         *   `redirect_uri` 是在用户授权后的回调地址
         
         *   `scope`是选填的一项，在于某些API需要`scope`权限申请。具体的参考各个站点自己的文档
-        
-        
-
 
 
 ## socialoauth 认证流程
 
 可以参考 `example/index.py` 中的例子
 
-基本过程分为以下几步，我们假设你注意到了顶部 **项目初始化**，并正确载入了配置。
-并且 有一个站点： `s = socialsites.list_sites()[0]`
 
 1.  得到 引导用户 授权的url
 
     ```python
-    from socialoauth.utils import import_oauth_class
+    from socialoauth import SocialSites
     
-    s = import_oauth_class(s)
-    authorize_url = s.authorize_url
+    socialsites = SocialSites(SOCIALOAUTH_SITES)
+    for s in socialsites.list_sites_class():
+        site = socialsites.get_site_object_by_class(s)
+        authorize_url = site.authorize_url
     ```
     
 2.  引导用户授权后，浏览器会跳转到你设置的 `redirect_uri`，在这里要取到 `access_code`,
@@ -169,9 +144,7 @@ SOCIALOAUTH_SITES = {
     假如你的 `redirect_uri` 对应的 views 处理函数为 `callback`， 如下所示：
     
     ```python
-    from socialoauth import socialsites
-    from socialoauth.utils import import_oauth_class
-    from socialoauth.exception import SocialAPIError
+    from socialoauth import SocialSites, SocialAPIError
     
     def callback(reqest, sitename):
         # sitename 参数就是从 redirect_uri 中取得的
@@ -190,7 +163,8 @@ SOCIALOAUTH_SITES = {
             # 重定向到某处，再做处理
             redirect('/SOME_WHERE')
             
-        s = import_oauth_class(socialsites[sitename])()
+        socialsites = SoicalSites(SOCIALOAUTH_SITES)
+        s = socialsites.get_site_object_by_name(sitename)
         
         # 用code去换取认证的access_token
         try:
@@ -304,6 +278,4 @@ class NewSite(OAuth2):
 
 
 这样一个OAuth2的client就写完了， 然后你还需要把于此站点有关的设置添加到 settings.py中
-
-
 

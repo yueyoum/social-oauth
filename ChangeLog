@@ -1,3 +1,11 @@
+2013-06-11 Wang Chao <yueyoum@gmail.com>
+    *   Version 0.3.0
+    *   Change the settings.py format, remove site_id
+    *   Do NOT need config `socialistes` when web project initialize
+    *   Make `socialoauth` more easy for use
+    *   PEP8 adjust
+
+
 2013-03-19  Wang Chao <yueyoum@gmail.com>
 
     *   Version 0.2.0
