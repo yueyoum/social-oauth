@@ -7,7 +7,7 @@ Python Package For SNS sites with OAuth2 support
 
 ## Feature
 
-*   易于扩展 ![参见doc.md](/doc.md)
+*   易于扩展 [参见doc.md](/doc.md)
 *   统一的接口
     
     *   各个站点，都有 `uid`, `name`, `avatar`, 属性
@@ -44,9 +44,11 @@ Python Package For SNS sites with OAuth2 support
 
 Thanks for this guys
 
-![Jiequan](https://github.com/Jiequan)
-![smilekzs](https://github.com/smilekzs)
-![andelf](https://github.com/andelf)
+![Jiequan][Jiequan] [Jiequan](https://github.com/Jiequan)
+
+![smilekzs][smilekzs] [smilekzs](https://github.com/smilekzs)
+
+![andelf][andelf] [andelf](https://github.com/andelf)
 
 
 ## Install
@@ -77,7 +79,7 @@ cp settings.py.example settings.py
 python index.py
 ```
 
-如何配置 settings.py ?  ![参见doc.md](/doc.md)
+如何配置 settings.py ?  [参见doc.md](/doc.md)
 
 现在用浏览器打开对应的地址，就能体验相应的功能。
 
@@ -109,7 +111,7 @@ example中有个简单的session机制，
 
 ## Document
 
-![参见doc.md](/doc.md)
+[参见doc.md](/doc.md)
 
 
 ## 吐槽
@@ -126,3 +128,7 @@ example中有个简单的session机制，
 
 [tocao_tencent_1]: http://wiki.opensns.qq.com/wiki/【QQ登录】使用Authorization_Code获取Access_Token
 [tocao_souhu_1]: http://open.t.sohu.com/en/使用Authorization_Code获取Access_Token
+[Jiequan]: https://secure.gravatar.com/avatar/1fc3c2ed714e2c2a26822ede8a927eac?s=80&d=https://a248.e.akamai.net/assets.github.com%2Fimages%2Fgravatars%2Fgravatar-user-420.png
+[smilekzs]: https://secure.gravatar.com/avatar/405626e107e40527578e65b05a5f7541?s=80&d=https://a248.e.akamai.net/assets.github.com%2Fimages%2Fgravatars%2Fgravatar-user-420.png
+[andelf]: https://secure.gravatar.com/avatar/0478b87ec69ce7ce034d370f326c50aa?s=80&d=https://a248.e.akamai.net/assets.github.com%2Fimages%2Fgravatars%2Fgravatar-user-420.png
+
