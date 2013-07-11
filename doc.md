@@ -2,7 +2,7 @@
 
 ##### 欢迎使用 socialoauth，目前版本 0.3.0，更新于 2013-06-11
 
-![版本历史](/ChangeLog)
+[版本历史](/ChangeLog)
 
 
 ## 属性
@@ -12,7 +12,7 @@
     site_name
     site_name_zh
     
-这两个属性是在settings文件中配置的。![如何配置settings](#-settingspy)
+这两个属性是在settings文件中配置的。[如何配置settings](#-settingspy)
 如果这个实例在用户认证完毕，成功调用 `get_access_token` 后，还会拥有下列属性
 
     uid             -   此站点上的用户uid

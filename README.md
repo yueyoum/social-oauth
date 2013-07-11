@@ -128,7 +128,7 @@ example中有个简单的session机制，
 
 [tocao_tencent_1]: http://wiki.opensns.qq.com/wiki/【QQ登录】使用Authorization_Code获取Access_Token
 [tocao_souhu_1]: http://open.t.sohu.com/en/使用Authorization_Code获取Access_Token
-[Jiequan]: https://secure.gravatar.com/avatar/1fc3c2ed714e2c2a26822ede8a927eac?s=80&d=https://a248.e.akamai.net/assets.github.com%2Fimages%2Fgravatars%2Fgravatar-user-420.png
-[smilekzs]: https://secure.gravatar.com/avatar/405626e107e40527578e65b05a5f7541?s=80&d=https://a248.e.akamai.net/assets.github.com%2Fimages%2Fgravatars%2Fgravatar-user-420.png
-[andelf]: https://secure.gravatar.com/avatar/0478b87ec69ce7ce034d370f326c50aa?s=80&d=https://a248.e.akamai.net/assets.github.com%2Fimages%2Fgravatars%2Fgravatar-user-420.png
+[Jiequan]: https://secure.gravatar.com/avatar/1fc3c2ed714e2c2a26822ede8a927eac?s=50&d=https://a248.e.akamai.net/assets.github.com%2Fimages%2Fgravatars%2Fgravatar-user-420.png
+[smilekzs]: https://secure.gravatar.com/avatar/405626e107e40527578e65b05a5f7541?s=50&d=https://a248.e.akamai.net/assets.github.com%2Fimages%2Fgravatars%2Fgravatar-user-420.png
+[andelf]: https://secure.gravatar.com/avatar/0478b87ec69ce7ce034d370f326c50aa?s=50&d=https://a248.e.akamai.net/assets.github.com%2Fimages%2Fgravatars%2Fgravatar-user-420.png
 
