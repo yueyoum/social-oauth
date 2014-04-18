@@ -43,7 +43,7 @@ class QQ(OAuth2):
         if 'callback(' in res:
             res = res[res.index('(')+1:res.rindex(')')]
             res = json.loads(res)
-            raise SocialAPIError(self.site_name,'',u'%s:%s'%(res['error'],res['error_description'])
+            raise SocialAPIError(self.site_name, '', u'%s:%s' % (res['error'],res['error_description']) )
         else:
             res = res.split('&')
             res = [_r.split('=') for _r in res]
