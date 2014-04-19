@@ -50,9 +50,9 @@ Thanks for this guys
 
 ![andelf][andelf] [andelf](https://github.com/andelf)
 
-![zxkane][zxkane] [andelf](https://github.com/zxkane)
+![zxkane][zxkane] [zxkane](https://github.com/zxkane)
 
-![yuanxu][yuanxu] [andelf](https://github.com/yuanxu)
+![yuanxu][yuanxu] [yuanxu](https://github.com/yuanxu)
 
 
 ## Install
