@@ -44,15 +44,15 @@ Python Package For SNS sites with OAuth2 support
 
 Thanks for this guys
 
-![Jiequan][Jiequan] [Jiequan](https://github.com/Jiequan)
+[Jiequan](https://github.com/Jiequan)
 
-![smilekzs][smilekzs] [smilekzs](https://github.com/smilekzs)
+[smilekzs](https://github.com/smilekzs)
 
-![andelf][andelf] [andelf](https://github.com/andelf)
+[andelf](https://github.com/andelf)
 
-![zxkane][zxkane] [zxkane](https://github.com/zxkane)
+[zxkane](https://github.com/zxkane)
 
-![yuanxu][yuanxu] [yuanxu](https://github.com/yuanxu)
+[yuanxu](https://github.com/yuanxu)
 
 
 ## Install
