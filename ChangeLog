@@ -1,6 +1,8 @@
-2014-04-19 Kane Zhu <kane.mx@gmail.com>
-	*	Fix.
-		see: https://github.com/yueyoum/social-oauth/pull/11
+2014-04-19 Kane Zhu <kane.mx@gmail.com>; Xu Yuan <ankh2008@hotmail.com>
+    *   Version 0.3.3
+    *   Fix.
+        see: https://github.com/yueyoum/social-oauth/pull/11
+        see: https://github.com/yueyoum/social-oauth/pull/12
 
 
 2013-06-24 Jiequan <https://github.com/jiequan>
@@ -27,3 +29,4 @@
 
 2013-03-17  Wang Chao <yueyoum@gmail.com>
     *   Version 0.1.0.  First release.
+

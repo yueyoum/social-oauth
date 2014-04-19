@@ -1,13 +1,12 @@
 # -*- coding: utf-8 -*-
 
-from urllib import urlencode
+from urllib import urlencode, quote_plus
 import urllib2
 import json
 from functools import wraps
 
 from socialoauth.exception import SocialAPIError, SocialSitesConfigError
 from socialoauth import SocialSites
-import urllib
 
 HTTP_TIMEOUT = 10
 
@@ -116,7 +115,7 @@ class OAuth2(object):
         """
 
         url = "%s?client_id=%s&response_type=code&redirect_uri=%s" % (
-            self.AUTHORIZE_URL, self.CLIENT_ID, urllib.quote_plus(self.REDIRECT_URI)
+            self.AUTHORIZE_URL, self.CLIENT_ID, quote_plus(self.REDIRECT_URI)
         )
 
         if getattr(self, 'SCOPE', None) is not None:

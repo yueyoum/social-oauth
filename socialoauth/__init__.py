@@ -4,7 +4,7 @@ from socialoauth.exception import SocialSitesConfigError, SocialAPIError
 from socialoauth.utils import import_oauth_class
 
 
-version_info = (0, 3, 2)
+version_info = (0, 3, 3)
 VERSION = __version__ = '.'.join( map(str, version_info) )
 
 
