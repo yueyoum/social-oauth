@@ -40,9 +40,14 @@ class QQ(OAuth2):
 
 
     def parse_token_response(self, res):
-        res = res.split('&')
-        res = [_r.split('=') for _r in res]
-        res = dict(res)
+        if 'callback(' in res:
+            res = res[res.index('(')+1:res.rindex(')')]
+            res = json.loads(res)
+            raise SocialAPIError(self.site_name, '', u'%s:%s' % (res['error'],res['error_description']) )
+        else:
+            res = res.split('&')
+            res = [_r.split('=') for _r in res]
+            res = dict(res)
 
         self.access_token = res['access_token']
         self.expires_in = int(res['expires_in'])
