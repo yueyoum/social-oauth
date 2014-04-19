@@ -1,3 +1,8 @@
+2014-04-19 Kane Zhu <kane.mx@gmail.com>
+	*	Fix.
+		see: https://github.com/yueyoum/social-oauth/pull/11
+
+
 2013-06-24 Jiequan <https://github.com/jiequan>
     *   Version 0.3.2
     *   Add taobao support
