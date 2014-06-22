@@ -9,9 +9,9 @@ Python Package For SNS sites with OAuth2 support
 
 *   易于扩展 [参见doc.md](/doc.md)
 *   统一的接口
-    
+
     *   各个站点，都有 `uid`, `name`, `avatar`, 属性
-    
+
         QQ 取回的 `avatar` 是40x40尺寸的，其余站点基本都是 48~50的尺寸
 
     *   各个站点，都有统一的 `api_http_get` 和 `api_http_post` 接口
@@ -19,9 +19,9 @@ Python Package For SNS sites with OAuth2 support
 *   统一的错误处理
 
     `api_http_get` 和 `api_http_post` 都可能引发异常，
-    
+
     应用程序只要 `try ... except SocialAPIError as e` 就能得到一致的错误信息：
-    
+
     *   `e.site_name`         哪个站点发生错误
     *   `e.url`               发生错误是请求的url
     *   `e.api_error_msg`     由站点返回的错误信息 or urllib2 的错误信息
@@ -38,6 +38,7 @@ Python Package For SNS sites with OAuth2 support
 *   百度
 *   开心网
 *   淘宝
+*   微信
 
 
 ## Contributors
@@ -125,7 +126,7 @@ example中有个简单的session机制，
 *   豆瓣文档太简陋
 *   搜狐文档就是个渣！！！ 都不想添加搜狐支持了
 *   发现一些文档和实际操作有出入， 主要是文档里说的必要参数，不传也一样工作
-    
+
     *   [腾讯][tocao_tencent_1] 文档里说取code的时候，state 必须 参数，但发现不传一样
     *   [搜狐][tocao_souhu_1] 和上面一样， wrap_client_state 参数
 

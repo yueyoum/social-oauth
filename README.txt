@@ -16,6 +16,7 @@ Supported the following sites (and the list are growing):
 *   baidu       (百度)
 *   kaixin001   (开心网)
 *   taobao      (淘宝网)
+*   wechat      (微信)
 
 
 
