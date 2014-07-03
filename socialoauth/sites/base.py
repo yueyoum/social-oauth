@@ -174,12 +174,13 @@ class OAuth2(object):
         name,
         avatar,
         """
-        raise NotImplementedError
+        raise NotImplementedError()
 
 
     def build_api_url(self, url):
-        raise NotImplementedError
+        raise NotImplementedError()
 
 
     def build_api_data(self, **kwargs):
-        raise NotImplementedError
+        raise NotImplementedError()
+
